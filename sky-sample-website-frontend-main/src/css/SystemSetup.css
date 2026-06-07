@@ -1,0 +1,305 @@
+/* System Setup styles */
+
+.setup-container {
+    padding: 40px;
+    flex-grow: 1;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: 24px;
+}
+
+.breadcrumb-active {
+    color: var(--color-text-brand);
+    font-weight: 700;
+}
+
+.breadcrumb-separator {
+    color: var(--color-text-secondary);
+    font-weight: 400;
+}
+
+/* Header Area */
+.setup-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: 16px;
+}
+
+.setup-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.add-system-btn {
+    width: 44px;
+    height: 44px;
+    background-color: var(--color-accent-green);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(15, 60, 43, 0.2);
+    transition: var(--transition-normal);
+}
+
+.add-system-btn:hover {
+    background-color: var(--color-accent-green-hover);
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(15, 60, 43, 0.3);
+}
+
+.add-system-btn:active {
+    transform: scale(0.95);
+}
+
+.add-system-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+}
+
+/* Systems List */
+.systems-list-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.system-list-item-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+}
+
+.system-list-item-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    border-color: #cbd5e1;
+}
+
+/* Left vertical accent bar */
+.system-accent-bar {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 36px;
+    background-color: #164e37;
+    border-radius: var(--radius-full);
+}
+
+.system-item-name {
+    margin-left: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.system-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.action-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.btn-edit {
+    color: var(--color-text-muted);
+}
+
+.btn-edit:hover {
+    background-color: var(--color-bg-input);
+    color: var(--color-accent-green);
+}
+
+.btn-delete {
+    color: var(--color-text-muted);
+}
+
+.btn-delete:hover {
+    background-color: #fff1f2;
+    color: var(--color-text-red);
+}
+
+[data-theme="dark"] .btn-delete:hover {
+    background-color: rgba(239, 68, 68, 0.12);
+}
+
+.action-icon-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.25s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal Card */
+.modal-card {
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 480px;
+    padding: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--color-border-light);
+    transform: translateY(20px);
+    animation: modalPopUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPopUp {
+    to { transform: translateY(0); }
+}
+
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 24px;
+}
+
+.modal-form-group {
+    margin-bottom: 24px;
+}
+
+.modal-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: var(--transition-normal);
+    background-color: var(--color-bg-input);
+    color: var(--color-text-primary);
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--color-accent-green);
+    box-shadow: 0 0 0 3px rgba(22, 78, 55, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-btn {
+    padding: 11px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.btn-cancel {
+    background-color: var(--color-bg-input);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-light);
+}
+
+.btn-cancel:hover {
+    background-color: var(--color-border-light);
+}
+
+.btn-save {
+    background-color: var(--color-accent-green);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 6px rgba(15, 60, 43, 0.1);
+}
+
+.btn-save:hover {
+    background-color: var(--color-accent-green-hover);
+    box-shadow: 0 4px 12px rgba(15, 60, 43, 0.2);
+}
+
+.btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.modal-error {
+    color: var(--color-text-red);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+/* Spinner inside save button */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}

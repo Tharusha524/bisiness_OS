@@ -1,0 +1,200 @@
+/* System Metrics custom layout styling */
+
+.title-group-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.setup-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.metrics-list-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.metric-list-item-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+}
+
+.metric-list-item-card:hover {
+    transform: translateY(-1.5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-light);
+}
+
+/* Left Accent Bar */
+.metric-accent-bar {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 38px;
+    background-color: var(--color-accent-green);
+    border-radius: var(--radius-full);
+}
+
+.metric-card-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: 12px;
+}
+
+/* Icon Container */
+.metric-icon-wrapper {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-metric);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-brand);
+    transition: var(--transition-normal);
+}
+
+.metric-list-item-card:hover .metric-icon-wrapper {
+    background-color: var(--color-bg-metric-hover);
+    transform: scale(1.05);
+}
+
+.metric-icon {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+}
+
+/* Text Detail Group */
+.metric-text-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.metric-card-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.metric-card-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-brand);
+    font-family: var(--font-sans);
+}
+
+.no-metrics-prompt {
+    text-align: center;
+    padding: 60px 40px;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    background-color: var(--color-bg-card);
+    border: 2px dashed var(--color-border-light);
+    border-radius: var(--radius-md);
+    margin-top: 10px;
+}
+
+.error-alert {
+    color: var(--color-text-red);
+    background-color: var(--color-bg-metric-red);
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.breadcrumb-link {
+    color: #64748b;
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.breadcrumb-link:hover {
+    color: var(--color-accent-green);
+    text-decoration: underline;
+}
+
+/* Icon picker inside Modal */
+.icon-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.icon-picker-btn {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.icon-picker-btn:hover {
+    border-color: #cbd5e1;
+    background-color: var(--color-bg-input);
+}
+
+.icon-picker-btn.selected {
+    border-color: var(--color-accent-green);
+    background-color: var(--color-bg-metric);
+    color: var(--color-text-brand);
+    box-shadow: 0 0 0 2px rgba(21, 76, 55, 0.15);
+}
+
+.picker-svg-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--color-text-secondary);
+    transition: var(--transition-fast);
+}
+
+.icon-picker-btn.selected .picker-svg-icon {
+    color: var(--color-text-brand);
+    transform: scale(1.1);
+}
+
+.picker-icon-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.icon-picker-btn.selected .picker-icon-name {
+    color: var(--color-text-brand);
+}
+
+.metric-modal-card {
+    max-width: 520px !important;
+}
+
+@media (max-width: 480px) {
+    .icon-selection-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
