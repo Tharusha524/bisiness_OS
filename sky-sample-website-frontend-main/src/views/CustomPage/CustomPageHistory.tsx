@@ -23,7 +23,7 @@ const initialRowState = {
 };
 
 interface CustomPageHistoryProps {
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
@@ -79,27 +79,31 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
         return <PermissionDenied />;
     }
 
+    const isModal = !!onClose;
+
     return (
-        <div className="history-modal-overlay">
-            <div className="custom-page-container animate-fade-in history-modal-content">
+        <div className={isModal ? "history-modal-overlay" : undefined}>
+            <div className={`custom-page-container animate-fade-in${isModal ? " history-modal-content" : ""}`}>
                 <div className="custom-page-header">
                     <div>
-                        <h1 style={{ color: '#1a6644', marginTop: '5px' }}>Daily KPI Dashboard History</h1>
+                        <h1 style={{ color: '#000000', marginTop: '5px' }}>Production System Overview</h1>
                         <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: '5px' }}>
-                            View past daily KPI records. This view is read-only.
+                            View production KPI records.
                         </p>
                     </div>
                     <div className="custom-page-actions">
                         <div className="date-picker-group">
                             <label>Date:</label>
-                            <input 
-                                type="date" 
-                                value={selectedDate} 
-                                onChange={(e) => setSelectedDate(e.target.value)} 
+                            <input
+                                type="date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
                                 className="custom-date-input"
                             />
                         </div>
-                        <button onClick={onClose} className="history-close-btn">&times;</button>
+                        {isModal && (
+                            <button onClick={onClose} className="history-close-btn">&times;</button>
+                        )}
                     </div>
                 </div>
 
@@ -113,7 +117,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
                     <div className="empty-state">No data found for this date.</div>
                 ) : (
                     <div className="read-only-dashboard">
-                        <div className="custom-table-wrapper">
+                        <div className="custom-table-wrapper" style={{ overflowX: 'auto', width: '100%' }}>
                             <table className="custom-kpi-table">
                                     <thead>
                                         <tr>

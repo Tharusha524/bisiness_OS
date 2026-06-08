@@ -78,21 +78,13 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container animate-fade-in" style={{ padding: '0px' }}>
-            <Head title="System Overview | Sky Smart" />
+            <Head title="System Overview | BizOS" />
 
             <div className="dashboard-header" style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                     <h2 className="dashboard-title">System Overview</h2>
-                    <p className="dashboard-subtitle">Real-time metrics across all operational divisions.</p>
+                    <p className="dashboard-subtitle">view KPI records</p>
                 </div>
-                {user?.permissionObject?.[PermissionKeys.CUSTOM_PAGE_VIEW] && (
-                    <button 
-                        onClick={() => setShowHistoryModal(true)} 
-                        style={{ padding: '10px 20px', backgroundColor: 'var(--color-accent-green)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}
-                    >
-                        View Saved KPI Dashboards
-                    </button>
-                )}
             </div>
 
             {showHistoryModal && (
@@ -293,7 +285,7 @@ export default function Dashboard() {
 
 function Head({ title }) {
     useEffect(() => {
-        document.title = title;
+        document.title = "BizOS";
     }, [title]);
     return null;
 }

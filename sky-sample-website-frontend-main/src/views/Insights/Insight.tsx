@@ -36,8 +36,7 @@ function Insight() {
         align="center"
         sx={{ mt: 2, color: "var(--pallet-main-blue)" }}
       >
-        View real-time insights on Sky Smart Tech Sample Web Site, collection
-        efficiency, and trends.
+        View real-time insights on collection efficiency and trends.
       </Typography>
     </Stack>
   );

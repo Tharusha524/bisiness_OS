@@ -137,7 +137,7 @@ export default function BankBalance() {
 
     return (
         <div className="setup-container animate-fade-in" style={{ padding: '0px' }}>
-            <Head title="Bank Balance Setup | Sky Smart" />
+            <Head title="Bank Balance Setup | BizOS" />
 
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
                 <Link to="/system-setup" style={{ color: 'var(--pallet-blue)', textDecoration: 'none' }}>System Setup</Link>
@@ -281,7 +281,7 @@ export default function BankBalance() {
 
 function Head({ title }) {
     useEffect(() => {
-        document.title = title;
+        document.title = "BizOS";
     }, [title]);
     return null;
 }

@@ -125,7 +125,7 @@ export default function SystemSetup() {
 
     return (
         <div className="setup-container animate-fade-in" style={{ padding: '0px' }}>
-            <Head title="System Setup | Sky Smart" />
+            <Head title="System Setup | BizOS" />
 
             <div className="setup-header-row" style={{ marginBottom: '24px' }}>
                 <h2 className="setup-title">Systems</h2>
@@ -234,7 +234,7 @@ export default function SystemSetup() {
 
 function Head({ title }) {
     useEffect(() => {
-        document.title = title;
+        document.title = "BizOS";
     }, [title]);
     return null;
 }

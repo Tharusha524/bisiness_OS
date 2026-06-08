@@ -304,11 +304,13 @@ const SectionAccordion = ({
                     if (parentSys && !rolePermissions[`SYSTEM_${parentSys.id}_VIEW`]) {
                       isDisabled = true;
                     }
+                  } else if (row.parentPermission && !rolePermissions[`${row.parentPermission}_VIEW`]) {
+                    isDisabled = true;
                   }
 
                   return (
                     <TableRow key={`${row.key}`}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" sx={row.parentPermission ? { paddingLeft: "2.5rem", color: "text.secondary" } : {}}>
                         {row.name}
                       </TableCell>
                       {row.permissionsExists.VIEW ? (
@@ -347,15 +349,39 @@ const SectionAccordion = ({
                                   }
                                 }
 
+                                if (row.key === "SETTINGS") {
+                                  ["SYSTEM_SETUP", "USER_SETTING", "COMPANY_SETTING"].forEach((childKey) => {
+                                    newPermissions[`${childKey}_VIEW`] = false;
+                                    newPermissions[`${childKey}_CREATE`] = false;
+                                    newPermissions[`${childKey}_EDIT`] = false;
+                                    newPermissions[`${childKey}_DELETE`] = false;
+                                    newPermissions[`${childKey}_NOTE`] = false;
+                                  });
+                                }
+
+                                if (row.key === "INPUT_DATA") {
+                                  ["CUSTOM_PAGE", "INPUT_PAGE"].forEach((childKey) => {
+                                    newPermissions[`${childKey}_VIEW`] = false;
+                                    newPermissions[`${childKey}_CREATE`] = false;
+                                    newPermissions[`${childKey}_EDIT`] = false;
+                                    newPermissions[`${childKey}_DELETE`] = false;
+                                    newPermissions[`${childKey}_NOTE`] = false;
+                                  });
+                                }
+
                                 setRolePermissions(newPermissions);
                               } else {
-                                setRolePermissions({
+                                const newPermissions: any = {
                                   ...rolePermissions,
                                   [`${row.key}_VIEW`]: true,
                                   [`${row.key}_CREATE`]: true,
                                   [`${row.key}_EDIT`]: true,
                                   [`${row.key}_DELETE`]: true,
-                                });
+                                };
+                                if (row.parentPermission) {
+                                  newPermissions[`${row.parentPermission}_VIEW`] = true;
+                                }
+                                setRolePermissions(newPermissions);
                               }
                             }}
                             inputProps={{ "aria-label": "controlled" }}

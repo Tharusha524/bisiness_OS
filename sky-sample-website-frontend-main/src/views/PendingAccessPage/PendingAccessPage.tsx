@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import HourglassEmptyRoundedIcon from "@mui/icons-material/HourglassEmptyRounded";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -52,12 +51,23 @@ function PendingAccessPage() {
           gap: 2,
         }}
       >
-        <HourglassEmptyRoundedIcon
-          sx={{ fontSize: 72, color: "var(--pallet-orange)" }}
-        />
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{
+            background: "linear-gradient(135deg, var(--pallet-blue) 0%, #00b4d8 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            letterSpacing: 1,
+            mb: 0.5,
+          }}
+        >
+          Welcome to bizOS
+        </Typography>
 
         <Typography
-          variant="h5"
+          variant="h6"
           fontWeight="bold"
           sx={{ color: "var(--pallet-blue)" }}
         >
@@ -65,13 +75,11 @@ function PendingAccessPage() {
         </Typography>
 
         <Typography variant="body1" sx={{ color: "text.secondary" }}>
-          Your account is currently pending access assignment.
+          Your account is currently pending.
         </Typography>
 
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          Please contact your administrator to get access to the system. Once
-          your role is assigned, you will be able to log in and use the
-          platform.
+          Please contact your administration to get access to the system.
         </Typography>
 
         <Button

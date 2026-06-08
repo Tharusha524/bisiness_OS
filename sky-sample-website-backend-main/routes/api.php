@@ -107,7 +107,7 @@ Route::post('register', [RegisteredUserController::class, 'store']);
 Route::get('all-users', [UserController::class, 'index']);
 Route::get('users/search', [UserController::class, 'search']);
 
-Route::post('login', [LoginController::class, 'login'])->middleware('throttle:20,1');
+Route::post('login', [LoginController::class, 'login']);
 Route::post('verify-2fa', [LoginController::class, 'verify2fa']);
 Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('reset-password', [ForgotPasswordController::class, 'otpVerifyFunction']);

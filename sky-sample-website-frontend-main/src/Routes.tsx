@@ -70,6 +70,7 @@ const Autocomplete = React.lazy(
 
 // Sky Smart Dashboard Views
 const Dashboard = React.lazy(() => import("./views/SystemDashboard/Dashboard"));
+const ProductionDashboard = React.lazy(() => import("./views/CustomPage/CustomPageHistory"));
 const SystemSetup = React.lazy(() => import("./views/SystemDashboard/SystemSetup"));
 const SystemMetrics = React.lazy(() => import("./views/SystemDashboard/SystemMetrics"));
 const BankBalance = React.lazy(() => import("./views/SystemDashboard/BankBalance"));
@@ -144,7 +145,7 @@ const ProtectedRoute = () => {
 const AppRoutes = () => {
   const hasToken = !!localStorage.getItem("token");
 
-  const { data: user } = useQuery<User>({
+  const { data: user, isLoading: isUserLoading } = useQuery<User>({
     queryKey: ["current-user"],
     queryFn: validateUser,
     enabled: hasToken,
@@ -155,6 +156,9 @@ const AppRoutes = () => {
       return user?.permissionObject;
     }
   }, [user]);
+
+  const canAccess = (key: PermissionKeys) =>
+    !isUserLoading && !!userPermissionObject?.[key];
 
   return (
     <Routes>
@@ -168,7 +172,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             InsightsPage,
-            !userPermissionObject?.[PermissionKeys.INSIGHT_VIEW]
+            !canAccess(PermissionKeys.INSIGHT_VIEW)
           )}
         />
 
@@ -178,7 +182,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             CustomPage,
-            !userPermissionObject?.[PermissionKeys.CUSTOM_PAGE_VIEW]
+            !canAccess(PermissionKeys.CUSTOM_PAGE_VIEW)
           )}
         />
 
@@ -188,7 +192,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             UserTable,
-            !userPermissionObject?.[PermissionKeys.ADMIN_USERS_VIEW]
+            !canAccess(PermissionKeys.ADMIN_USERS_VIEW)
           )}
         />
         <Route
@@ -196,7 +200,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             AccessManagementTable,
-            !userPermissionObject?.[PermissionKeys.ADMIN_ACCESS_MNG_VIEW]
+            !canAccess(PermissionKeys.ADMIN_ACCESS_MNG_VIEW)
           )}
         />
 
@@ -266,7 +270,15 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             Dashboard,
-            !userPermissionObject?.[PermissionKeys.DASHBOARD_VIEW]
+            !canAccess(PermissionKeys.DASHBOARD_VIEW)
+          )}
+        />
+        <Route
+          path="/production-dashboard"
+          element={withLayout(
+            MainLayout,
+            ProductionDashboard,
+            !canAccess(PermissionKeys.PRODUCTION_DASHBOARD_VIEW)
           )}
         />
         <Route
@@ -274,7 +286,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             SystemSetup,
-            !userPermissionObject?.[PermissionKeys.SYSTEM_SETUP_VIEW]
+            !canAccess(PermissionKeys.SYSTEM_SETUP_VIEW)
           )}
         />
         <Route
@@ -282,7 +294,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             SystemMetrics,
-            !userPermissionObject?.[PermissionKeys.SYSTEM_SETUP_VIEW]
+            !canAccess(PermissionKeys.SYSTEM_SETUP_VIEW)
           )}
         />
         <Route
@@ -290,7 +302,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             KpiForm,
-            !userPermissionObject?.[PermissionKeys.SYSTEM_SETUP_EDIT]
+            !canAccess(PermissionKeys.SYSTEM_SETUP_EDIT)
           )}
         />
         <Route
@@ -298,7 +310,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             KpiForm,
-            !userPermissionObject?.[PermissionKeys.SYSTEM_SETUP_EDIT]
+            !canAccess(PermissionKeys.SYSTEM_SETUP_EDIT)
           )}
         />
         <Route
@@ -306,7 +318,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             MetricDetails,
-            !userPermissionObject?.[PermissionKeys.SYSTEM_SETUP_VIEW]
+            !canAccess(PermissionKeys.SYSTEM_SETUP_VIEW)
           )}
         />
         <Route
@@ -314,7 +326,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             BankBalance,
-            !userPermissionObject?.[PermissionKeys.SYSTEM_SETUP_VIEW]
+            !canAccess(PermissionKeys.SYSTEM_SETUP_VIEW)
           )}
         />
         <Route
@@ -330,7 +342,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             Report,
-            !userPermissionObject?.[PermissionKeys.REPORT_VIEW]
+            !canAccess(PermissionKeys.REPORT_VIEW)
           )}
         />
         <Route
@@ -338,7 +350,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             UserSetting,
-            !userPermissionObject?.[PermissionKeys.USER_SETTING_VIEW]
+            !canAccess(PermissionKeys.USER_SETTING_VIEW)
           )}
         />
         <Route
@@ -346,7 +358,7 @@ const AppRoutes = () => {
           element={withLayout(
             MainLayout,
             CompanySetting,
-            !userPermissionObject?.[PermissionKeys.COMPANY_SETTING_VIEW]
+            !canAccess(PermissionKeys.COMPANY_SETTING_VIEW)
           )}
         />
 
@@ -356,7 +368,7 @@ const AppRoutes = () => {
           element={withLayout(
             UserLayout,
             Dashboard,
-            !userPermissionObject?.[PermissionKeys.DASHBOARD_VIEW]
+            !canAccess(PermissionKeys.DASHBOARD_VIEW)
           )}
         />
         <Route
@@ -364,7 +376,7 @@ const AppRoutes = () => {
           element={withLayout(
             UserLayout,
             Report,
-            !userPermissionObject?.[PermissionKeys.REPORT_VIEW]
+            !canAccess(PermissionKeys.REPORT_VIEW)
           )}
         />
         <Route
@@ -372,7 +384,7 @@ const AppRoutes = () => {
           element={withLayout(
             UserLayout,
             UserInputSystems,
-            !userPermissionObject?.[PermissionKeys.INPUT_PAGE_VIEW]
+            !canAccess(PermissionKeys.INPUT_PAGE_VIEW)
           )}
         />
         <Route
@@ -380,7 +392,7 @@ const AppRoutes = () => {
           element={withLayout(
             UserLayout,
             UserInputMetrics,
-            !userPermissionObject?.[PermissionKeys.INPUT_PAGE_VIEW]
+            !canAccess(PermissionKeys.INPUT_PAGE_VIEW)
           )}
         />
         <Route
@@ -388,7 +400,7 @@ const AppRoutes = () => {
           element={withLayout(
             UserLayout,
             UserInputForm,
-            !userPermissionObject?.[PermissionKeys.INPUT_PAGE_EDIT]
+            !canAccess(PermissionKeys.INPUT_PAGE_EDIT)
           )}
         />
       </Route>

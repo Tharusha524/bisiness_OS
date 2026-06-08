@@ -43,6 +43,7 @@ import ProfileImage from "../ProfileImageComponent";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useOrganization from "../../hooks/useOrganization";
 import fallbackLogo from "../../assets/company-logo1.jpg";
+import pandaLogo from "../../assets/Untitled design.png";
 
 const drawerWidth = 265;
 
@@ -196,60 +197,50 @@ export default function MainLayout({ children, sidebarConfig }: Props) {
               >
                 <MenuIcon />
               </IconButton>
-              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <img
-                  src={logoUrl ?? fallbackLogo}
-                  alt={organizationName ?? "logo"}
-                  height={"45rem"}
-                  style={{ marginTop: "10px" }}
-                />
-                {organizationName && (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                <Box sx={{ display: "flex", alignItems: "baseline" }}>
                   <Typography
-                    variant="subtitle1"
-                    noWrap
-                    sx={{ fontWeight: 700, color: "var(--pallet-blue)", display: { xs: "none", sm: "block" } }}
+                    component="span"
+                    sx={{
+                      fontFamily: '"ALTRONED Trial", "Orbitron", sans-serif',
+                      fontWeight: 900,
+                      fontSize: { xs: "1.7rem", sm: "2.1rem" },
+                      color: "#1a1a2e",
+                      letterSpacing: 1,
+                      lineHeight: 1,
+                    }}
                   >
-                    {organizationName}
+                    Bis
                   </Typography>
-                )}
-              </Box>
-            </Box>
-            {!isMobile && (
-              <Box
-                sx={{
-                  display: "flex",
-                }}
-              >
+                  <Typography
+                    component="span"
+                    sx={{
+                      fontFamily: '"ALTRONED Trial", "Orbitron", sans-serif',
+                      fontWeight: 900,
+                      fontSize: { xs: "1.7rem", sm: "2.1rem" },
+                      color: "var(--pallet-orange)",
+                      letterSpacing: 1,
+                      lineHeight: 1,
+                    }}
+                  >
+                    OS
+                  </Typography>
+                </Box>
                 <Typography
-                  variant="subtitle1"
-                  noWrap
-                  component="div"
+                  component="span"
                   sx={{
+                    fontSize: "0.8rem",
                     color: "var(--pallet-blue)",
-                    display: "flex",
-                    marginRight: "0.5rem",
+                    letterSpacing: 0.5,
+                    fontStyle: "italic",
+                    display: { xs: "none", sm: "block" },
+                    lineHeight: 1,
                   }}
                 >
-                  Monitor and Manage
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  noWrap
-                  component="div"
-                  sx={{ color: theme.palette.text.primary, display: "flex" }}
-                >
-                  <span className="slider-text" style={{ fontWeight: 600 }}>
-                    Sustainability
-                  </span>
-                  <span className="slider-text" style={{ fontWeight: 600 }}>
-                    Health & Safety
-                  </span>
-                  <span className="slider-text" style={{ fontWeight: 600 }}>
-                    Social
-                  </span>
+                  One Platform. Complete Visibility.
                 </Typography>
               </Box>
-            )}
+            </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               {/* {!isMobile && (
                 <>
@@ -357,7 +348,7 @@ export default function MainLayout({ children, sidebarConfig }: Props) {
             "@media print": { display: "none" }
           }}
         >
-          <DrawerContent handleDrawerClose={handleDrawerClose} sidebarConfig={sidebarConfig || sidebarItems} organizationName={organizationName} />
+          <DrawerContent handleDrawerClose={handleDrawerClose} sidebarConfig={sidebarConfig || sidebarItems} organizationName={organizationName} logoUrl={logoUrl} />
         </MobileDrawer>
       ) : (
         <Drawer
@@ -374,7 +365,7 @@ export default function MainLayout({ children, sidebarConfig }: Props) {
             "@media print": { display: "none" }
           }}
         >
-          <DrawerContent handleDrawerClose={handleDrawerClose} sidebarConfig={sidebarConfig || sidebarItems} organizationName={organizationName} />
+          <DrawerContent handleDrawerClose={handleDrawerClose} sidebarConfig={sidebarConfig || sidebarItems} organizationName={organizationName} logoUrl={logoUrl} />
         </Drawer>
       )}
       <Box component="main" sx={{ flexGrow: 1, p: 3, "@media print": { p: 0 } }}>
@@ -389,10 +380,12 @@ const DrawerContent = ({
   handleDrawerClose,
   sidebarConfig,
   organizationName,
+  logoUrl,
 }: {
   handleDrawerClose: () => void;
   sidebarConfig: SidebarItem[];
   organizationName?: string | null;
+  logoUrl?: string | null;
 }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -413,23 +406,53 @@ const DrawerContent = ({
 
   return (
     <>
-      <DrawerHeader sx={{ justifyContent: "flex-start" }}>
-        <IconButton onClick={handleDrawerClose}>
+      {/* Sidebar brand logo section */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 1.5,
+          py: 1.5,
+          backgroundColor: "#010f24",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box
+            component="img"
+            src={pandaLogo}
+            alt="JP Capitals"
+            sx={{
+              height: 36,
+              width: "auto",
+              objectFit: "contain",
+              borderRadius: 1,
+              backgroundColor: "#fff",
+              padding: "3px",
+            }}
+          />
+          <Box>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: "#fff",
+                fontWeight: 700,
+                lineHeight: 1.2,
+                letterSpacing: 0.5,
+              }}
+            >
+              JP Capitals
+            </Typography>
+          </Box>
+        </Box>
+        <IconButton onClick={handleDrawerClose} size="small">
           {theme.direction === "rtl" ? (
-            <ChevronRightIcon sx={{ color: "#fff" }} />
+            <ChevronRightIcon sx={{ color: "#7db0ff" }} />
           ) : (
-            <ChevronLeftIcon sx={{ color: "#fff" }} />
+            <ChevronLeftIcon sx={{ color: "#7db0ff" }} />
           )}
         </IconButton>
-        <Typography
-          variant="subtitle1"
-          noWrap
-          component="div"
-          sx={{ color: "#7db0ff" }}
-        >
-          {organizationName ?? "Hello, Welcome!"}
-        </Typography>
-      </DrawerHeader>
+      </Box>
       <Divider sx={{ marginBottom: "1rem", backgroundColor: "#7db0ff" }} />
         <Box
           sx={{

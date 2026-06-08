@@ -2,17 +2,16 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import HomeIcon from "@mui/icons-material/Home";
 import LayersIcon from "@mui/icons-material/Layers";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import SpaIcon from "@mui/icons-material/Spa";
 import ForestIcon from "@mui/icons-material/Forest";
 import ScienceIcon from "@mui/icons-material/Science";
 import EmergencyIcon from "@mui/icons-material/Emergency";
 import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
-import FolderIcon from "@mui/icons-material/Folder";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PollOutlinedIcon from "@mui/icons-material/PollOutlined";
+import FactoryIcon from "@mui/icons-material/Factory";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import DatasetLinkedOutlinedIcon from "@mui/icons-material/DatasetLinkedOutlined";
 import SentimentSatisfiedAltOutlinedIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
@@ -62,25 +61,19 @@ export const sidebarItems: Array<SidebarItem> = [
     accessKey: PermissionKeys.INSIGHT_VIEW,
   },
   {
-    headline: "Sky Smart Dashboard",
+    headline: "BizOS Dashboard",
   },
   {
-    title: "Dashboard",
+    title: "Main Dashboard",
     href: "/dashboard",
     icon: <DashboardIcon fontSize="small" />,
     accessKey: PermissionKeys.DASHBOARD_VIEW,
   },
   {
-    title: "Custom Page",
-    href: "/custom-page",
-    icon: <LayersIcon fontSize="small" />,
-    accessKey: PermissionKeys.CUSTOM_PAGE_VIEW,
-  },
-  {
-    title: "System Setup",
-    href: "/system-setup",
-    icon: <SettingsOutlinedIcon fontSize="small" />,
-    accessKey: PermissionKeys.SYSTEM_SETUP_VIEW,
+    title: "Production Dashboard",
+    href: "/production-dashboard",
+    icon: <FactoryIcon fontSize="small" />,
+    accessKey: PermissionKeys.PRODUCTION_DASHBOARD_VIEW,
   },
   {
     title: "Report",
@@ -89,22 +82,48 @@ export const sidebarItems: Array<SidebarItem> = [
     accessKey: PermissionKeys.REPORT_VIEW,
   },
   {
-    title: "Input Page",
-    href: "/user-input",
-    icon: <LayersIcon fontSize="small" />,
-    accessKey: PermissionKeys.INPUT_PAGE_VIEW,
+    title: "Input Data",
+    icon: <DatasetLinkedOutlinedIcon fontSize="small" />,
+    open: false,
+    nestedItems: [
+      {
+        title: "Custom Page",
+        href: "/custom-page",
+        icon: <LayersIcon fontSize="small" />,
+        accessKey: PermissionKeys.CUSTOM_PAGE_VIEW,
+      },
+      {
+        title: "Input Page",
+        href: "/user-input",
+        icon: <SubdirectoryArrowRightIcon fontSize="small" />,
+        accessKey: PermissionKeys.INPUT_PAGE_VIEW,
+      },
+    ],
   },
   {
-    title: "User Setting",
-    href: "/user-setting",
-    icon: <ManageAccountsOutlinedIcon fontSize="small" />,
-    accessKey: PermissionKeys.USER_SETTING_VIEW,
-  },
-  {
-    title: "Company Setting",
-    href: "/company-setting",
-    icon: <BusinessOutlinedIcon fontSize="small" />,
-    accessKey: PermissionKeys.COMPANY_SETTING_VIEW,
+    title: "Settings",
+    icon: <SettingsOutlinedIcon fontSize="small" />,
+    open: false,
+    nestedItems: [
+      {
+        title: "System Setup",
+        href: "/system-setup",
+        icon: <ConstructionIcon fontSize="small" />,
+        accessKey: PermissionKeys.SYSTEM_SETUP_VIEW,
+      },
+      {
+        title: "User Setting",
+        href: "/user-setting",
+        icon: <ManageAccountsOutlinedIcon fontSize="small" />,
+        accessKey: PermissionKeys.USER_SETTING_VIEW,
+      },
+      {
+        title: "Company Setting",
+        href: "/company-setting",
+        icon: <BusinessOutlinedIcon fontSize="small" />,
+        accessKey: PermissionKeys.COMPANY_SETTING_VIEW,
+      },
+    ],
   },
 
   {

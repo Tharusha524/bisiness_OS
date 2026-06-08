@@ -15,17 +15,6 @@ export const PermissionSectionsMap: PermissionSection[] = [
           NOTE: false,
         },
       },
-      {
-        name: "Custom Page (Daily KPI)",
-        key: "CUSTOM_PAGE",
-        permissionsExists: {
-          VIEW: true,
-          CREATE: false,
-          EDIT: true,
-          DELETE: false,
-          NOTE: false,
-        },
-      },
     ],
   },
   {
@@ -39,6 +28,7 @@ export const PermissionSectionsMap: PermissionSection[] = [
           CREATE: false,
           EDIT: true,
           DELETE: true,
+          NOTE: false,
         },
       },
       {
@@ -49,6 +39,7 @@ export const PermissionSectionsMap: PermissionSection[] = [
           CREATE: true,
           EDIT: true,
           DELETE: true,
+          NOTE: false,
         },
       },
     ],
@@ -61,7 +52,7 @@ export const PermissionSectionsMap: PermissionSection[] = [
         name: "System Management",
       },
       {
-        name: "Dashboard",
+        name: "Main Dashboard",
         key: "DASHBOARD",
         permissionsExists: {
           VIEW: true,
@@ -72,13 +63,14 @@ export const PermissionSectionsMap: PermissionSection[] = [
         },
       },
       {
-        name: "System Setup",
-        key: "SYSTEM_SETUP",
+        name: "Production Dashboard",
+        key: "PRODUCTION_DASHBOARD",
         permissionsExists: {
           VIEW: true,
           CREATE: false,
-          EDIT: true,
+          EDIT: false,
           DELETE: false,
+          NOTE: false,
         },
       },
       {
@@ -93,42 +85,93 @@ export const PermissionSectionsMap: PermissionSection[] = [
         },
       },
       {
-        name: "User Setting",
-        key: "USER_SETTING",
+        break: true,
+        name: "Input Data",
+      },
+      {
+        name: "Input Data",
+        key: "INPUT_DATA",
+        permissionsExists: {
+          VIEW: true,
+          CREATE: false,
+          EDIT: false,
+          DELETE: false,
+          NOTE: false,
+        },
+      },
+      {
+        name: "Custom Page (Daily KPI)",
+        key: "CUSTOM_PAGE",
+        parentPermission: "INPUT_DATA",
         permissionsExists: {
           VIEW: true,
           CREATE: false,
           EDIT: true,
           DELETE: false,
+          NOTE: false,
+        },
+      },
+      {
+        name: "Input Page",
+        key: "INPUT_PAGE",
+        parentPermission: "INPUT_DATA",
+        permissionsExists: {
+          VIEW: true,
+          CREATE: false,
+          EDIT: true,
+          DELETE: false,
+          NOTE: false,
+        },
+      },
+      {
+        break: true,
+        name: "Settings",
+      },
+      {
+        name: "Settings",
+        key: "SETTINGS",
+        permissionsExists: {
+          VIEW: true,
+          CREATE: false,
+          EDIT: false,
+          DELETE: false,
+          NOTE: false,
+        },
+      },
+      {
+        name: "System Setup",
+        key: "SYSTEM_SETUP",
+        parentPermission: "SETTINGS",
+        permissionsExists: {
+          VIEW: true,
+          CREATE: false,
+          EDIT: true,
+          DELETE: false,
+          NOTE: false,
+        },
+      },
+      {
+        name: "User Setting",
+        key: "USER_SETTING",
+        parentPermission: "SETTINGS",
+        permissionsExists: {
+          VIEW: true,
+          CREATE: false,
+          EDIT: true,
+          DELETE: false,
+          NOTE: false,
         },
       },
       {
         name: "Company Setting",
         key: "COMPANY_SETTING",
+        parentPermission: "SETTINGS",
         permissionsExists: {
           VIEW: true,
           CREATE: false,
           EDIT: true,
           DELETE: false,
-        },
-      },
-    ],
-  },
-  {
-    mainSection: "User Actions",
-    subSections: [
-      {
-        break: true,
-        name: "Data Entry",
-      },
-      {
-        name: "Input Page",
-        key: "INPUT_PAGE",
-        permissionsExists: {
-          VIEW: true,
-          CREATE: false,
-          EDIT: true,
-          DELETE: false,
+          NOTE: false,
         },
       },
     ],
@@ -195,6 +238,7 @@ export interface SubSectionWithPermissions {
   name: string;
   key: string;
   permissionsExists: PermissionsExists;
+  parentPermission?: string;
 }
 
 export interface SubSectionBreak {
@@ -230,6 +274,9 @@ export enum PermissionKeys {
   
   // Sky Smart Dashboard
   DASHBOARD_VIEW = "DASHBOARD_VIEW",
+  PRODUCTION_DASHBOARD_VIEW = "PRODUCTION_DASHBOARD_VIEW",
+  INPUT_DATA_VIEW = "INPUT_DATA_VIEW",
+  SETTINGS_VIEW = "SETTINGS_VIEW",
   SYSTEM_SETUP_VIEW = "SYSTEM_SETUP_VIEW",
   SYSTEM_SETUP_EDIT = "SYSTEM_SETUP_EDIT",
   REPORT_VIEW = "REPORT_VIEW",
@@ -283,6 +330,9 @@ export const defaultViewerPermissions: PermissionKeysObject = {
   CUSTOM_PAGE_EDIT: false,
   
   DASHBOARD_VIEW: true,
+  PRODUCTION_DASHBOARD_VIEW: true,
+  INPUT_DATA_VIEW: true,
+  SETTINGS_VIEW: false,
   SYSTEM_SETUP_VIEW: false,
   SYSTEM_SETUP_EDIT: false,
   REPORT_VIEW: true,

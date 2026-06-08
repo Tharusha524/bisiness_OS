@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ComOrganization;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\EmailChangeOTPsend\SendOtpEmailChange;
 
@@ -20,24 +19,11 @@ class LoginController extends Controller
             return response()->json(['message' => 'System is currently under maintenance. Please try again later.'], 503);
         }
 
-        $maxAttempts = $org ? (int)$org->maxLoginAttempts : 10;
-        $throttleKey = mb_strtolower($request->input('email')) . '|' . $request->ip();
-
-        if (RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
-            return response()->json([
-                'message' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minutes.'
-            ], 429);
-        }
-
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            RateLimiter::hit($throttleKey, 60 * 5); // Lock for 5 mins
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-
-        RateLimiter::clear($throttleKey);
 
         if ($user->availability != 1) {
             return response()->json(['message' => 'User is not available'], 403);

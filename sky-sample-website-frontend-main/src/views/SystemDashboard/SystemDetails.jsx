@@ -375,7 +375,7 @@ export default function SystemDetails() {
 
     return (
         <div className="dashboard-container animate-fade-in" style={{ padding: '0px' }}>
-            <Head title={`${currentSystem?.name || 'Details'} Analytics | Sky Smart`} />
+            <Head title={`${currentSystem?.name || 'Details'} Analytics | BizOS`} />
 
             <div className="details-container-split">
 
@@ -909,7 +909,7 @@ export default function SystemDetails() {
 
 function Head({ title }) {
     useEffect(() => {
-        document.title = title;
+        document.title = "BizOS";
     }, [title]);
     return null;
 }
