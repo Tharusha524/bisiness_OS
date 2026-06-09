@@ -170,6 +170,13 @@ class UserController extends Controller
         ? $user->profileImage
         : json_decode($user->profileImage, true) ?? [];
 
+        if ($request->boolean('clearImage')) {
+            foreach ($existingImages as $uri) {
+                $this->profileImageService->deleteImageFromGCS($uri);
+            }
+            $existingImages = [];
+        }
+
         if ($request->filled('removeDoc')) {
             foreach ($request->removeDoc as $removeDoc) {
                 $this->profileImageService->deleteImageFromGCS($removeDoc);

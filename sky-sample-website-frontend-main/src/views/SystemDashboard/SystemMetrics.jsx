@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import api from '../../utils/api';
-import useCurrentUser from '../../hooks/useCurrentUser';
 import '../../css/Dashboard.css';
 import '../../css/SystemMetrics.css';
 
@@ -105,8 +104,6 @@ const AVAILABLE_ICONS = [
 export default function SystemMetrics() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user } = useCurrentUser();
-
     const [system, setSystem] = useState(null);
     const [metrics, setMetrics] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -196,7 +193,7 @@ export default function SystemMetrics() {
             )}
 
             <div className="metrics-list-col">
-                {metrics.filter(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]).map((metric) => {
+                {metrics.map((metric) => {
                     return (
                         <div 
                             key={metric.id} 
@@ -240,7 +237,7 @@ export default function SystemMetrics() {
                     ); 
                 })}
 
-                {metrics.filter(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]).length === 0 && !loading && (
+                {metrics.length === 0 && !loading && (
                     <div className="no-metrics-prompt">
                         No metrics configured for this system. Click the "+" button to define a new metric.
                     </div>

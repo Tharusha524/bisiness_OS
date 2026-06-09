@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return redirect('http://localhost:5173');
+    return redirect(env('FRONTEND_URL', 'http://localhost:5173'));
 });
 
 Route::get('/dashboard', function () {

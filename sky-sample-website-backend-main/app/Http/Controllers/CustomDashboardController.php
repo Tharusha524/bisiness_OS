@@ -12,7 +12,7 @@ class CustomDashboardController extends Controller
     {
         $date = $request->query('date', Carbon::today()->toDateString());
         
-        $dashboard = CustomDashboard::whereDate('date', $date)->first();
+        $dashboard = CustomDashboard::whereRaw('DATE(`date`) = ?', [$date])->first();
 
         if (!$dashboard) {
             return response()->json([

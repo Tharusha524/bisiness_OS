@@ -86,6 +86,7 @@ export default function UserInputSystems() {
 
             <div className="systems-grid">
                 {systems.filter(system => {
+                    if (user?.permissionObject?.['SYSTEM_SETUP_EDIT']) return true;
                     const hasSystemView = user?.permissionObject?.[`SYSTEM_${system.id}_VIEW`];
                     const hasAnyKpiEdit = system.metrics?.some(m => user?.permissionObject?.[`KPI_${m.id}_EDIT`]);
                     return hasSystemView || hasAnyKpiEdit;

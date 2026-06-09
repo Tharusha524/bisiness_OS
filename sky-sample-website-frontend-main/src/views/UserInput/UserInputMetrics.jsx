@@ -57,7 +57,7 @@ export default function UserInputMetrics() {
             </div>
 
             <div className="metrics-list-col">
-                {metrics.filter(metric => user?.permissionObject?.[`KPI_${metric.id}_EDIT`]).map((metric) => (
+                {metrics.filter(metric => user?.permissionObject?.['SYSTEM_SETUP_EDIT'] || user?.permissionObject?.[`KPI_${metric.id}_EDIT`]).map((metric) => (
                     <div 
                         key={metric.id} 
                         className="metric-list-item-card clickable-metric-card"

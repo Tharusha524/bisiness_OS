@@ -1,5 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^$ public/index.php [L]
-    RewriteRule ^((?!public/).*)$ public/$1 [L,QSA]
+    RewriteBase /panda_jp/backend/
+
+    # Pass Authorization header through
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Let public/ handle its own requests — do NOT intercept them here
+    RewriteRule ^public/ - [L]
 </IfModule>

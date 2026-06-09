@@ -15,13 +15,12 @@ import {
   Stack,
   TableFooter,
   TablePagination,
-  Tabs,
-  Tab,
   Theme,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import theme from "../../theme";
 import PageTitle from "../../components/PageTitle";
 import Breadcrumb from "../../components/BreadCrumb";
@@ -29,13 +28,11 @@ import { useMemo, useState } from "react";
 import ViewDataDrawer, { DrawerHeader } from "../../components/ViewDataDrawer";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import { useSnackbar } from "notistack";
-import { fetchAllUsers, updateUserType, User, grantUserAccess } from "../../api/userApi";
+import { fetchAllUsers, updateUserType, deleteUser, User, grantUserAccess } from "../../api/userApi";
 import { getAccessRolesList, createAccessRole } from "../../api/accessManagementApi";
 import ViewUserContent from "./ViewUserContent";
 import EditUserRoleDialog from "./EditUserRoleDialog";
 
-import DepartmentTable from "./DepartmentTable";
-import JobPositionTable from "./JobPositionTable";
 import { PermissionKeys } from "./SectionList";
 import useCurrentUserHaveAccess from "../../hooks/useCurrentUserHaveAccess";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -51,7 +48,6 @@ function UserTable() {
   const [grantingUserId, setGrantingUserId] = useState<number | null>(null);
   // const [userData, setUserData] = useState<User[]>(sampleUsers);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -104,9 +100,10 @@ function UserTable() {
     mutationFn: updateUserType,
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["current-user"] });
       setOpenEditUserRoleDialog(false);
       setOpenViewDrawer(false);
-      enqueueSnackbar("User Role Updated Successfully!", {
+      enqueueSnackbar("User Updated Successfully!", {
         variant: "success",
       });
     },
@@ -133,6 +130,21 @@ function UserTable() {
     },
   });
 
+  const { mutate: deleteUserMutation } = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["access-roles"] });
+      setDeleteDialogOpen(false);
+      setOpenViewDrawer(false);
+      setSelectedRow(null);
+      enqueueSnackbar("User deleted successfully!", { variant: "success" });
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to delete user", { variant: "error" });
+    },
+  });
+
   return (
     <Stack>
       <Box
@@ -147,19 +159,9 @@ function UserTable() {
         <PageTitle title="Users" />
         <Breadcrumb breadcrumbs={breadcrumbItems} />
         
-        <Tabs 
-          value={activeTab} 
-          onChange={(e, newValue) => setActiveTab(newValue)}
-          sx={{ marginTop: 2, borderBottom: 1, borderColor: 'divider' }}
-        >
-          <Tab label="Users List" />
-          <Tab label="Departments" />
-          <Tab label="Job Positions" />
-        </Tabs>
       </Box>
       <Stack sx={{ alignItems: "center", width: "100%" }}>
-        {activeTab === 0 && (
-          <TableContainer
+        <TableContainer
             component={Paper}
             elevation={2}
             sx={{
@@ -178,6 +180,7 @@ function UserTable() {
                   <TableCell align="right">Job Position</TableCell>
                   <TableCell align="center">Access</TableCell>
                   <TableCell align="center">Status</TableCell>
+                  <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -274,6 +277,22 @@ function UserTable() {
                           />
                         )}
                       </TableCell>
+                      <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="error"
+                          disabled={!canEditUsers}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedRow(row);
+                            setDeleteDialogOpen(true);
+                          }}
+                          sx={{ minWidth: 0, padding: "4px 8px" }}
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -301,19 +320,7 @@ function UserTable() {
               </TableFooter>
             </Table>
           </TableContainer>
-        )}
 
-        {activeTab === 1 && (
-          <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "center" }}>
-            <DepartmentTable />
-          </Box>
-        )}
-
-        {activeTab === 2 && (
-          <Box sx={{ width: "100%", padding: 2, display: "flex", justifyContent: "center" }}>
-            <JobPositionTable />
-          </Box>
-        )}
       </Stack>
       <ViewDataDrawer
         open={openViewDrawer}
@@ -372,14 +379,8 @@ function UserTable() {
             </>
           }
           handleClose={() => setDeleteDialogOpen(false)}
-          deleteFunc={async () => {}}
+          deleteFunc={async () => deleteUserMutation(selectedRow?.id)}
           onSuccess={() => {
-            setOpenViewDrawer(false);
-            setSelectedRow(null);
-            setDeleteDialogOpen(false);
-            enqueueSnackbar("User Deleted Successfully!", {
-              variant: "success",
-            });
           }}
           handleReject={() => {
             setOpenViewDrawer(false);

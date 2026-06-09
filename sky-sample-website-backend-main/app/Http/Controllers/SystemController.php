@@ -34,7 +34,7 @@ class SystemController extends Controller
 
         $system = System::create($validated);
 
-        return response()->json($system, 211); // Custom status code or 201 Created
+        return response()->json($system, 201);
     }
 
     /**

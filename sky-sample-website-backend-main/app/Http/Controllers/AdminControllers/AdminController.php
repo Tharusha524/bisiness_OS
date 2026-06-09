@@ -99,6 +99,7 @@ class AdminController extends Controller
 
         $rules = [
             'availability' => 'nullable|boolean',
+            'name'         => 'nullable|string|max:255',
         ];
 
         // Apply these rules only when availability is 1
@@ -113,6 +114,7 @@ class AdminController extends Controller
 
         $request->validate($rules);
 
+        $user->name          = $request->input('name', $user->name);
         $user->userType      = $request->input('userType', $user->userType);
         $user->department    = $request->input('department', $user->department);
         $user->assigneeLevel = $request->input('assigneeLevel', $user->assigneeLevel);
@@ -124,6 +126,22 @@ class AdminController extends Controller
         return response()->json($user->toArray(), 200);
     }
 
+
+    public function destroy(string $id)
+    {
+        $user = $this->userInterface->findById($id);
+
+        if (! $user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Revoke all Sanctum tokens so access is immediately cut
+        $user->tokens()->delete();
+
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully'], 200);
+    }
 
     public function assigneeLevel()
     {

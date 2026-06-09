@@ -40,6 +40,7 @@ type DialogProps = {
   defaultValues?: User;
   onSubmit: (data: {
     id: number;
+    name: string;
     userTypeId: number;
     assigneeLevel: string;
     department: string;
@@ -80,6 +81,7 @@ export default function EditUserRoleDialog({
   const {
     handleSubmit,
     control,
+    register,
     formState: { errors },
     reset,
     watch,
@@ -166,36 +168,15 @@ export default function EditUserRoleDialog({
           {!!isAvailability ? (
             <>
               <Box sx={{ flex: 1 }}>
-                <Controller
-                  name="userType"
-                  control={control}
-                  defaultValue={defaultValues?.userType}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <Autocomplete
-                      {...field}
-                      onChange={(_, data) => field.onChange(data)}
-                      getOptionLabel={(option) => option?.userType || ""}
-                      isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                      size="small"
-                      options={roles || []}
-                      sx={{ flex: 1, margin: "0.5rem" }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option.id}>
-                          {option.userType}
-                        </li>
-                      )}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          required
-                          error={!!errors.userType}
-                          label="Role"
-                          name="userType"
-                        />
-                      )}
-                    />
-                  )}
+                <TextField
+                  {...register("name", { required: true })}
+                  required
+                  label="Name"
+                  size="small"
+                  fullWidth
+                  error={!!errors.name}
+                  helperText={errors.name ? "Required *" : ""}
+                  sx={{ flex: 1, margin: "0.5rem" }}
                 />
               </Box>
 
@@ -326,6 +307,7 @@ export default function EditUserRoleDialog({
           onClick={handleSubmit((data) => {
             onSubmit({
               id: defaultValues?.id,
+              name: data.name,
               userTypeId: data.userType?.id,
               assigneeLevel: data.userLevel?.id,
               department: data.department,

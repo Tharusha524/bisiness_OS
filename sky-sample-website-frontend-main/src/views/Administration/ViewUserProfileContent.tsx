@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { DrawerContentItem } from "../../components/ViewDataDrawer";
 import useIsMobile from "../../customHooks/useIsMobile";
-import { updateUserProfileImage, User } from "../../api/userApi";
+import { updateUserProfileImage, removeUserProfileImage, User } from "../../api/userApi";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import queryClient from "../../state/queryClient";
@@ -53,10 +53,27 @@ function ViewUserContent({ selectedUser }: { selectedUser: User }) {
     mutationFn: updateUserProfileImage,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current-user"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       enqueueSnackbar("Profile updated successfully!", { variant: "success" });
+      setImageFile(null);
+      setImagePreview(null);
     },
     onError: () => {
       enqueueSnackbar("Profile update failed", { variant: "error" });
+    },
+  });
+
+  const { mutate: removeImageMutation, isPending: isRemoving } = useMutation({
+    mutationFn: removeUserProfileImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["current-user"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      enqueueSnackbar("Profile image removed!", { variant: "success" });
+      setImageFile(null);
+      setImagePreview(null);
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to remove profile image", { variant: "error" });
     },
   });
 
@@ -140,6 +157,22 @@ function ViewUserContent({ selectedUser }: { selectedUser: User }) {
               onChange={handleImageChange}
             />
           </CustomButton>
+
+          {!imageFile && selectedUser?.profileImage && (selectedUser.profileImage as any[]).length > 0 && (
+            <CustomButton
+              variant="outlined"
+              onClick={() => removeImageMutation(selectedUser.id)}
+              sx={{ mt: 2, color: "var(--pallet-red)", borderColor: "var(--pallet-red)" }}
+              disabled={isRemoving}
+              endIcon={
+                isRemoving && (
+                  <CircularProgress size={20} sx={{ color: "var(--pallet-red)" }} />
+                )
+              }
+            >
+              Remove Photo
+            </CustomButton>
+          )}
 
           {imageFile && (
             <CustomButton

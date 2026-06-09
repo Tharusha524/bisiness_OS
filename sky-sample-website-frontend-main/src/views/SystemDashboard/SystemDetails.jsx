@@ -324,7 +324,8 @@ export default function SystemDetails() {
             const metricsRes = await api.get(`/systems/${id}/metrics`);
             setMetrics(metricsRes.data);
             
-            const accessibleMetrics = metricsRes.data.filter(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]);
+            const isAdmin = user?.permissionObject?.['SYSTEM_SETUP_EDIT'];
+            const accessibleMetrics = metricsRes.data.filter(m => isAdmin || user?.permissionObject?.[`KPI_${m.id}_VIEW`]);
             if (accessibleMetrics.length > 0) {
                 setActiveMetric(accessibleMetrics[0]);
             } else {
@@ -398,7 +399,7 @@ export default function SystemDetails() {
                     </div>
 
                     <div className="kpi-tabs-row animate-fade-in">
-                        {metrics.filter(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]).map((metric) => {
+                        {metrics.filter(m => user?.permissionObject?.['SYSTEM_SETUP_EDIT'] || user?.permissionObject?.[`KPI_${m.id}_VIEW`]).map((metric) => {
                             const isActive = activeMetric && activeMetric.id === metric.id;
                             const displayName = metric.name
                                 .replace('Total ', '')
@@ -414,7 +415,7 @@ export default function SystemDetails() {
                                 </button>
                             );
                         })}
-                        {metrics.filter(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]).length === 0 && (
+                        {metrics.filter(m => user?.permissionObject?.['SYSTEM_SETUP_EDIT'] || user?.permissionObject?.[`KPI_${m.id}_VIEW`]).length === 0 && (
                             <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', fontWeight: 600, padding: '10px 0' }}>
                                 No KPI metrics configured for this system.
                             </div>

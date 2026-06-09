@@ -101,8 +101,9 @@ export default function Report() {
 
     const allMetrics = useMemo(() => {
         let metricsList = [];
-        systems.filter(sys => user?.permissionObject?.[`SYSTEM_${sys.id}_VIEW`]).forEach(sys => {
-            (sys.metrics || []).filter(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]).forEach(m => {
+        const isAdmin = user?.permissionObject?.['SYSTEM_SETUP_EDIT'];
+        systems.filter(sys => isAdmin || user?.permissionObject?.[`SYSTEM_${sys.id}_VIEW`]).forEach(sys => {
+            (sys.metrics || []).filter(m => isAdmin || user?.permissionObject?.[`KPI_${m.id}_VIEW`]).forEach(m => {
                 metricsList.push({
                     ...m,
                     systemName: sys.name,

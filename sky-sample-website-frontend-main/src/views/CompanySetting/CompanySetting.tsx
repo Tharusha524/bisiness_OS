@@ -4,6 +4,8 @@ import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material';
 import { getOrganization, updateOrganization } from '../../api/OrganizationSettings/organizationSettingsApi';
 import { fetchHolidays, createHoliday, updateHoliday, deleteHoliday } from '../../api/OrganizationSettings/companyHolidaysApi';
+import DepartmentTable from '../Administration/DepartmentTable';
+import JobPositionTable from '../Administration/JobPositionTable';
 import '../../css/Dashboard.css';
 import '../../css/SystemSetup.css';
 
@@ -423,6 +425,20 @@ export default function CompanySetting() {
                     <SaveBtn text="Save Changes" pending={updateOrgMutation.isPending} />
                 </div>
             </form>
+
+            {/* ── 7. Departments ── */}
+            <div style={{ display: 'grid', gap: '28px', maxWidth: '880px', marginTop: '28px' }}>
+                <div style={cardStyle}>
+                    <SectionHeader title="Departments" desc="Manage the departments in your organisation." />
+                    <DepartmentTable />
+                </div>
+
+                {/* ── 8. Job Positions ── */}
+                <div style={cardStyle}>
+                    <SectionHeader title="Job Positions" desc="Manage job positions available in your organisation." />
+                    <JobPositionTable />
+                </div>
+            </div>
 
             {/* ── Holidays Drawer ── */}
             {isHolidayOpen && (

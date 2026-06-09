@@ -143,7 +143,7 @@ export default function SystemSetup() {
             )}
 
             <div className="systems-list-col">
-                {systems.filter(system => user?.permissionObject?.[`SYSTEM_${system.id}_VIEW`]).map((system) => (
+                {systems.map((system) => (
                     <div 
                         key={system.id} 
                         className="system-list-item-card"

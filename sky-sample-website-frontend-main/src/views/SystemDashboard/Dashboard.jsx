@@ -94,15 +94,18 @@ export default function Dashboard() {
             {systems && (
                 <div className="systems-grid">
                     {systems.filter(system => {
+                        const isAdmin = user?.permissionObject?.['SYSTEM_SETUP_EDIT'];
+                        if (isAdmin) return true;
                         const hasSystemView = user?.permissionObject?.[`SYSTEM_${system.id}_VIEW`];
                         const hasAnyKpiView = system.metrics?.some(m => user?.permissionObject?.[`KPI_${m.id}_VIEW`]);
                         const hasBadgeView = system.badge?.metricId ? user?.permissionObject?.[`KPI_${system.badge.metricId}_VIEW`] : false;
                         const hasAlertView = system.alert?.metricId ? user?.permissionObject?.[`KPI_${system.alert.metricId}_VIEW`] : false;
                         return hasSystemView || hasAnyKpiView || hasBadgeView || hasAlertView;
                     }).map((system) => {
-                        const visibleMetrics = system.metrics ? system.metrics.filter(metric => user?.permissionObject?.[`KPI_${metric.id}_VIEW`]) : [];
-                        const showBadge = system.badge?.metricId ? !!user?.permissionObject?.[`KPI_${system.badge.metricId}_VIEW`] : false;
-                        const showAlert = system.alert?.metricId ? !!user?.permissionObject?.[`KPI_${system.alert.metricId}_VIEW`] : false;
+                        const isAdmin = user?.permissionObject?.['SYSTEM_SETUP_EDIT'];
+                        const visibleMetrics = system.metrics ? system.metrics.filter(metric => isAdmin || user?.permissionObject?.[`KPI_${metric.id}_VIEW`]) : [];
+                        const showBadge = system.badge?.metricId ? (isAdmin || !!user?.permissionObject?.[`KPI_${system.badge.metricId}_VIEW`]) : false;
+                        const showAlert = system.alert?.metricId ? (isAdmin || !!user?.permissionObject?.[`KPI_${system.alert.metricId}_VIEW`]) : false;
                         return (
                         <div key={system.id} className="system-card">
                             <div className="card-header">

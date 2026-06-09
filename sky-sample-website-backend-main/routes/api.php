@@ -164,6 +164,8 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('permission:ADMIN_USERS_VIEW');
     Route::post('users/{id}/update', [AdminController::class, 'update'])
         ->middleware('permission:ADMIN_USERS_EDIT');
+    Route::delete('users/{id}', [AdminController::class, 'destroy'])
+        ->middleware('permission:ADMIN_USERS_EDIT');
 
     // ── Administration – Access Management ───────────────────────────────────
     Route::get('user-permissions', [ComPermissionController::class, 'index'])

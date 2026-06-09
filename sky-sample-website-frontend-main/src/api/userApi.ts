@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 import { z } from "zod";
 import { PermissionKeysObjectSchema } from "../views/Administration/SectionList";
 import { StorageFileSchema } from "../utils/StorageFiles.util";
@@ -79,17 +79,17 @@ export const passwordResetSchema = z.object({
 export type PasswordReset = z.infer<typeof passwordResetSchema>;
 
 export async function login(data: { email: string; password: string }) {
-  const res = await axios.post("/api/login", data);
+  const res = await api.post("/login", data);
   return res.data;
 }
 
 export async function verify2fa(data: { user_id: number; otp: string }) {
-  const res = await axios.post("/api/verify-2fa", data);
+  const res = await api.post("/verify-2fa", data);
   return res.data;
 }
 
 export async function userPasswordReset(data: PasswordReset) {
-  const res = await axios.post(`/api/user-change-password`, data);
+  const res = await api.post(`/user-change-password`, data);
   return res.data;
 }
 
@@ -114,7 +114,7 @@ export async function registerUser({
   department: string;
   employeeNumber: string;
 }) {
-  const res = await axios.post("/api/register", {
+  const res = await api.post("/register", {
     email,
     password,
     name,
@@ -129,17 +129,17 @@ export async function registerUser({
 }
 
 export async function validateUser() {
-  const res = await axios.get("/api/user");
+  const res = await api.get("/user");
   return res.data;
 }
 
 export async function fetchAllUsers() {
-  const res = await axios.get("/api/all-users");
+  const res = await api.get("/all-users");
   return res.data;
 }
 
 export async function forgotPassword({ email }: { email: string }) {
-  const res = await axios.post("/api/forgot-password", {
+  const res = await api.post("/forgot-password", {
     email,
   });
   return res.data;
@@ -152,7 +152,7 @@ export async function otpVerification({
   email: string;
   otp: string;
 }) {
-  const res = await axios.post("/api/reset-password", {
+  const res = await api.post("/reset-password", {
     email,
     otp,
   });
@@ -166,7 +166,7 @@ export async function resetPassword({
   email: string;
   password: string;
 }) {
-  const res = await axios.post("/api/change-password", {
+  const res = await api.post("/change-password", {
     email,
     password,
   });
@@ -174,12 +174,13 @@ export async function resetPassword({
 }
 
 export async function fetchAllAssigneeLevel() {
-  const res = await axios.get("/api/assignee-level");
+  const res = await api.get("/assignee-level");
   return res.data;
 }
 
 export async function updateUserType({
   id,
+  name,
   userTypeId,
   assigneeLevel,
   department,
@@ -187,13 +188,15 @@ export async function updateUserType({
   jobPosition,
 }: {
   id: number;
+  name?: string;
   userTypeId: number;
   assigneeLevel: string;
   department: string;
   availability: boolean;
   jobPosition: string;
 }) {
-  const res = await axios.post(`/api/users/${id}/update`, {
+  const res = await api.post(`/users/${id}/update`, {
+    name,
     userType: userTypeId?.toString(),
     assigneeLevel: assigneeLevel?.toString() ?? null,
     department,
@@ -206,32 +209,32 @@ export async function updateUserType({
 
 //assignee by the responsible section
 export async function fetchHazardRiskAssignee() {
-  const res = await axios.get("/api/hazard-risks-assignee");
+  const res = await api.get("/hazard-risks-assignee");
   return res.data;
 }
 
 export async function fetchAccidentAssignee() {
-  const res = await axios.get("/api/accidents-assignee");
+  const res = await api.get("/accidents-assignee");
   return res.data;
 }
 
 export async function fetchIncidentAssignee() {
-  const res = await axios.get("/api/incidents-assignee");
+  const res = await api.get("/incidents-assignee");
   return res.data;
 }
 
 export async function fetchMedicineRequestAssignee() {
-  const res = await axios.get("/api/medicine-request-assignee");
+  const res = await api.get("/medicine-request-assignee");
   return res.data;
 }
 
 export async function fetchInternalAuditAssignee() {
-  const res = await axios.get("/api/internal-audit-assignee");
+  const res = await api.get("/internal-audit-assignee");
   return res.data;
 }
 
 export async function fetchExternalAuditAssignee() {
-  const res = await axios.get("/api/external-audit-assignee");
+  const res = await api.get("/external-audit-assignee");
   return res.data;
 }
 
@@ -245,12 +248,17 @@ export async function updateUserProfileImage({
   const formData = new FormData();
   formData.append("profileImage[0]", imageFile); // Backend expects an array
 
-  const res = await axios.post(`/api/user/${id}/profile-update`, formData, {
+  const res = await api.post(`/user/${id}/profile-update`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
+  return res.data;
+}
+
+export async function removeUserProfileImage(id: number) {
+  const res = await api.post(`/user/${id}/profile-update`, { clearImage: true });
   return res.data;
 }
 
@@ -276,49 +284,54 @@ export async function updateUserProfileDetails(data: {
   // Remove id from payload body as it is used in URL
   delete (payload as any).id;
 
-  const res = await axios.post(`/api/user/${data.id}/profile-update`, payload);
+  const res = await api.post(`/user/${data.id}/profile-update`, payload);
 
   return res.data;
 }
 
 export async function resetProfileEmail({ currentEmail,id }: { currentEmail: string, id: number }) {
-  const res = await axios.post(`/api/user/${id}/email-change`, {
+  const res = await api.post(`/user/${id}/email-change`, {
     currentEmail,
   });
   return res.data;
 }
 
 export async function resetProfileEmailVerification({ otp,id }: { otp: string, id: number }) {
-  const res = await axios.post(`/api/user/${id}/email-change-verify`, {
+  const res = await api.post(`/user/${id}/email-change-verify`, {
     otp,
   });
   return res.data;
 }
 
 export async function resetProfileEmailConfirm({ newEmail,id }: { newEmail: string, id: number }) {
-  const res = await axios.post(`/api/user/${id}/email-change-confirm`, {
+  const res = await api.post(`/user/${id}/email-change-confirm`, {
     newEmail,
   });
   return res.data;
 }
 
 export async function fetchActiveSessions() {
-  const res = await axios.get("/api/user/active-sessions");
+  const res = await api.get("/user/active-sessions");
   return res.data;
 }
 
 export async function revokeSession(tokenId: number) {
-  const res = await axios.delete(`/api/user/active-sessions/${tokenId}`);
+  const res = await api.delete(`/user/active-sessions/${tokenId}`);
   return res.data;
 }
 
 export async function fetchLoginHistory() {
-  const res = await axios.get("/api/user/login-history");
+  const res = await api.get("/user/login-history");
+  return res.data;
+}
+
+export async function deleteUser(id: number) {
+  const res = await api.delete(`/users/${id}`);
   return res.data;
 }
 
 export async function grantUserAccess({ id, userTypeId }: { id: number; userTypeId: number }) {
-  const res = await axios.post(`/api/users/${id}/update`, {
+  const res = await api.post(`/users/${id}/update`, {
     userType: userTypeId.toString(),
     availability: 1,
   });

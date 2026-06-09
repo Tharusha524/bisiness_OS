@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../utils/api";
 import { z } from "zod";
 import { StorageFileSchema } from "../../utils/StorageFiles.util";
 
@@ -62,7 +62,7 @@ export const OrganizationSchema = z.object({
 export type Organization = z.infer<typeof OrganizationSchema>;
 
 export async function getOrganization() {
-  const res = await axios.get(`/api/organizations`);
+  const res = await api.get(`/organizations`);
   return res.data;
 }
 
@@ -120,8 +120,8 @@ export const updateOrganization = async (organization: Organization) => {
     }
   });
   try {
-    const response = await axios.post(
-      `/api/organizations/${organization.id}/update`,
+    const response = await api.post(
+      `/organizations/${organization.id}/update`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
