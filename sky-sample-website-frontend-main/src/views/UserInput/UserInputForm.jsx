@@ -151,7 +151,8 @@ export default function UserInputForm() {
                 if (metricItems.length > 0 && dv.item_values) {
                     setItemValues(dv.item_values);
                 } else if (dv.value !== null && dv.value !== undefined) {
-                    setSingleValue(String(dv.value).replace(/[^0-9.-]+/g, ''));
+                    const numeric = parseFloat(String(dv.value).replace(/[^0-9.-]+/g, ''));
+                    setSingleValue(isNaN(numeric) ? '' : String(numeric));
                 }
                 setNotes(dv.notes || '');
             } else {
@@ -218,9 +219,15 @@ export default function UserInputForm() {
 
         setSaving(true);
         try {
-            let formattedValue = String(currentTotal);
-            if (metric.type?.toLowerCase() === 'currency') formattedValue = 'Rs. ' + formattedValue;
-            if (metric.type?.toLowerCase() === 'percentage') formattedValue = formattedValue + '%';
+            const type = metric.type?.toLowerCase();
+            let formattedValue;
+            if (type === 'currency') {
+                formattedValue = 'Rs. ' + parseFloat(currentTotal).toFixed(2);
+            } else if (type === 'percentage') {
+                formattedValue = parseFloat(currentTotal).toFixed(2) + '%';
+            } else {
+                formattedValue = String(currentTotal);
+            }
 
             const payload = {
                 data_date: selectedDate,
@@ -232,23 +239,26 @@ export default function UserInputForm() {
             // Save to daily-values history
             await api.post(`/metrics/${metricId}/daily-values`, payload);
 
-            // For composite metrics also keep metric_items in sync (for dashboard display)
-            if (isComposite) {
-                for (const item of metricItems) {
-                    await api.put(`/metrics/${metricId}/items/${item.id}`, {
-                        name: item.name,
-                        value: parseFloat(itemValues[item.id]) || 0,
-                    });
+            // Only sync metric_items and metric.value for today's data.
+            // For historical dates the backend already re-syncs metric.value
+            // to the most recent data_date entry, so overwriting here would
+            // push a past value into the live dashboard.
+            if (isToday) {
+                if (isComposite) {
+                    for (const item of metricItems) {
+                        await api.put(`/metrics/${metricId}/items/${item.id}`, {
+                            name: item.name,
+                            value: parseFloat(itemValues[item.id]) || 0,
+                        });
+                    }
                 }
+
+                await api.put(`/metrics/${metricId}`, {
+                    ...metric,
+                    value: formattedValue,
+                });
             }
 
-            // Keep main metric value in sync
-            await api.put(`/metrics/${metricId}`, {
-                ...metric,
-                value: formattedValue,
-            });
-
-            const isToday = selectedDate === localToday();
             enqueueSnackbar(
                 isToday ? 'Data saved successfully!' : `Historical data for ${selectedDate} saved!`,
                 { variant: 'success' }

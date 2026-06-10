@@ -65,7 +65,7 @@ export default function UserInputMetrics() {
                         style={{ cursor: 'pointer' }}
                     >
                         <div className="metric-accent-bar"></div>
-                        <div className="metric-icon-box">
+                        <div className="metric-icon-box" style={{ marginLeft: '12px' }}>
                             {getMetricIcon(metric.icon)}
                         </div>
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', marginLeft: '16px' }}>

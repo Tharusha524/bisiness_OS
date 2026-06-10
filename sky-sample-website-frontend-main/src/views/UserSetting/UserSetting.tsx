@@ -7,6 +7,7 @@ import {
     updateUserProfileDetails, userPasswordReset, updateUserProfileImage,
     fetchActiveSessions, fetchLoginHistory, revokeSession,
     resetProfileEmail, resetProfileEmailVerification, resetProfileEmailConfirm,
+    exportUserData,
 } from '../../api/userApi';
 import api from '../../utils/api';
 import '../../css/Dashboard.css';
@@ -413,7 +414,31 @@ export default function UserSetting() {
                     </div>
                 </div>
 
-                {/* ── 7. Login History ── */}
+                {/* ── 7. My Data ── */}
+                <div style={cardStyle}>
+                    <SectionHeader title="My Data" desc="Download a copy of all your personal data stored in the system." />
+                    <button
+                        onClick={async () => {
+                            try {
+                                const data = await exportUserData();
+                                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `my-data-${new Date().toISOString().split('T')[0]}.json`;
+                                a.click();
+                                URL.revokeObjectURL(url);
+                            } catch {
+                                enqueueSnackbar('Failed to export data', { variant: 'error' });
+                            }
+                        }}
+                        style={{ padding: '10px 22px', backgroundColor: '#3b82f6', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, color: 'white' }}
+                    >
+                        Export My Data (JSON)
+                    </button>
+                </div>
+
+                {/* ── 8. Login History ── */}
                 <div style={cardStyle}>
                     <SectionHeader title="Login History" desc="Recent sign-ins to your account." />
                     <div style={{ overflowX: 'auto' }}>

@@ -152,8 +152,7 @@ export default function CustomPage() {
                         <thead>
                             <tr>
                                 <th>Shift</th>
-                                <th>No</th>
-                                <th>MC</th>
+                                <th>No MC</th>
                                 <th>Operators</th>
                                 <th>Item</th>
                                 <th>Target<br/>(Qty)</th>
@@ -179,11 +178,19 @@ export default function CustomPage() {
                                                 <strong>{isA ? 'A' : 'B'}</strong>
                                             </td>
                                         )}
-                                        <td className="no-cell">{rowKey.charAt(1)}</td>
-                                        {Object.keys(initialRowState).map(field => (
+                                        <td className="no-cell">
+                                            <input
+                                                type="text"
+                                                value={row.mc || ''}
+                                                onChange={(e) => handleInputChange(rowKey, 'mc', e.target.value)}
+                                                disabled={!canEdit}
+                                                style={{ width: '55px' }}
+                                            />
+                                        </td>
+                                        {Object.keys(initialRowState).filter(f => f !== 'mc').map(field => (
                                             <td key={field}>
-                                                <input 
-                                                    type={field === 'mc' || field === 'item' ? 'text' : 'number'}
+                                                <input
+                                                    type={field === 'item' || field === 'operators' ? 'text' : 'number'}
                                                     value={row[field] || ''}
                                                     onChange={(e) => handleInputChange(rowKey, field, e.target.value)}
                                                     disabled={!canEdit}
@@ -195,7 +202,7 @@ export default function CustomPage() {
                             })}
                             <tr className="total-row">
                                 <td colSpan={2} className="total-label">Total</td>
-                                {Object.keys(initialRowState).map(field => (
+                                {Object.keys(initialRowState).filter(f => f !== 'mc').map(field => (
                                     <td key={field} className="total-value">
                                         {calcTotal(field)}
                                     </td>

@@ -68,10 +68,13 @@ class MetricDailyValueController extends Controller
             ]
         );
 
-        // Keep the main metric value in sync when entering data for today
-        $today = now()->toDateString();
-        if ($request->data_date === $today && $request->filled('value')) {
-            $metric->updateQuietly(['value' => $request->value]);
+        // Always keep the main metric value in sync with the most recent daily entry
+        $latest = MetricDailyValue::where('metric_id', $metricId)
+            ->whereNotNull('value')
+            ->orderBy('data_date', 'desc')
+            ->first();
+        if ($latest) {
+            $metric->updateQuietly(['value' => $latest->value]);
         }
 
         return response()->json($dailyValue, 201);

@@ -207,34 +207,8 @@ export async function updateUserType({
   return res.data;
 }
 
-//assignee by the responsible section
-export async function fetchHazardRiskAssignee() {
-  const res = await api.get("/hazard-risks-assignee");
-  return res.data;
-}
-
-export async function fetchAccidentAssignee() {
-  const res = await api.get("/accidents-assignee");
-  return res.data;
-}
-
-export async function fetchIncidentAssignee() {
-  const res = await api.get("/incidents-assignee");
-  return res.data;
-}
-
-export async function fetchMedicineRequestAssignee() {
-  const res = await api.get("/medicine-request-assignee");
-  return res.data;
-}
-
-export async function fetchInternalAuditAssignee() {
-  const res = await api.get("/internal-audit-assignee");
-  return res.data;
-}
-
-export async function fetchExternalAuditAssignee() {
-  const res = await api.get("/external-audit-assignee");
+export async function exportUserData() {
+  const res = await api.get("/user/export-data");
   return res.data;
 }
 

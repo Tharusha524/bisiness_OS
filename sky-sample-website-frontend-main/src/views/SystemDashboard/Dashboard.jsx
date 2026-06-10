@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, Link, useLocation } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import api from '../../utils/api';
 import useCurrentUser from '../../hooks/useCurrentUser';
@@ -16,6 +16,7 @@ export default function Dashboard() {
     const queryClient = useQueryClient();
     
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         // Redirect to preferred system if user has a default set
@@ -23,6 +24,9 @@ export default function Dashboard() {
             navigate(`/system-details/${user.defaultSystemView}`, { replace: true });
             return;
         }
+
+        setLoading(true);
+        setSystems(null);
 
         const fetchDashboardData = async () => {
             try {
@@ -41,7 +45,7 @@ export default function Dashboard() {
         };
 
         fetchDashboardData();
-    }, [user?.defaultSystemView]);
+    }, [user?.defaultSystemView, location.pathname]);
 
     const handleLocalLogout = () => {
         localStorage.removeItem('token');
@@ -146,7 +150,7 @@ export default function Dashboard() {
                                                 .map((metric, idx) => (
                                                 <div key={idx} className="metric-block" style={{ position: 'relative' }}>
                                                     <span className="metric-label">{metric.label}</span>
-                                                    <span className="metric-value">{metric.value}</span>
+                                                    <span className="metric-value" style={metric.status === 'red' ? { color: '#ef4444' } : undefined}>{metric.value}</span>
                                                     {metric.note && (
                                                         <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>
                                                             * {metric.note}
@@ -191,9 +195,25 @@ export default function Dashboard() {
                                                 )}
                                             </div>
                                         )}
-                                        <div className="optimal-container">
-                                            {system.status}
-                                        </div>
+                                        {visibleMetrics.length > 0 ? (
+                                            <div className="metrics-grid-2x2">
+                                                {visibleMetrics.map((metric, idx) => (
+                                                    <div key={idx} className="metric-block" style={{ position: 'relative' }}>
+                                                        <span className="metric-label">{metric.label}</span>
+                                                        <span className="metric-value">{metric.value}</span>
+                                                        {metric.note && (
+                                                            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>
+                                                                * {metric.note}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="optimal-container">
+                                                {system.status}
+                                            </div>
+                                        )}
                                     </>
                                 )}
 
@@ -234,7 +254,7 @@ export default function Dashboard() {
                                             {visibleMetrics.map((metric, idx) => (
                                                 <div key={idx} className="metric-block" style={{ position: 'relative' }}>
                                                     <span className="metric-label">{metric.label}</span>
-                                                    <span className="metric-value">{metric.value}</span>
+                                                    <span className="metric-value" style={metric.status === 'red' ? { color: '#ef4444' } : undefined}>{metric.value}</span>
                                                     {metric.note && (
                                                         <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>
                                                             * {metric.note}
@@ -252,7 +272,7 @@ export default function Dashboard() {
                                             {visibleMetrics.map((metric, idx) => (
                                                 <div key={idx} className="metric-block" style={{ position: 'relative' }}>
                                                     <span className="metric-label">{metric.label}</span>
-                                                    <span className="metric-value">{metric.value}</span>
+                                                    <span className="metric-value" style={metric.status === 'red' ? { color: '#ef4444' } : undefined}>{metric.value}</span>
                                                     {metric.note && (
                                                         <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>
                                                             * {metric.note}

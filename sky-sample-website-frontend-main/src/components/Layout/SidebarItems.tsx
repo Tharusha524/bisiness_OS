@@ -5,12 +5,10 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import SpaIcon from "@mui/icons-material/Spa";
 import ForestIcon from "@mui/icons-material/Forest";
-import ScienceIcon from "@mui/icons-material/Science";
 import EmergencyIcon from "@mui/icons-material/Emergency";
 import ChangeHistoryIcon from "@mui/icons-material/ChangeHistory";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import PollOutlinedIcon from "@mui/icons-material/PollOutlined";
 import FactoryIcon from "@mui/icons-material/Factory";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import DatasetLinkedOutlinedIcon from "@mui/icons-material/DatasetLinkedOutlined";
@@ -87,7 +85,7 @@ export const sidebarItems: Array<SidebarItem> = [
     open: false,
     nestedItems: [
       {
-        title: "Custom Page",
+        title: "Production Page",
         href: "/custom-page",
         icon: <LayersIcon fontSize="small" />,
         accessKey: PermissionKeys.CUSTOM_PAGE_VIEW,

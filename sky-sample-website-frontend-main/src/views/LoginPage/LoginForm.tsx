@@ -56,11 +56,8 @@ function LoginForm() {
     localStorage.setItem("token", data?.access_token);
     await queryClient.invalidateQueries({ queryKey: ["current-user"] });
     enqueueSnackbar("Welcome Back!", { variant: "success" });
-    if (data?.user?.role === 'user') {
-      navigate("/dashboard");
-    } else {
-      navigate("/home");
-    }
+    const hasDashboard = !!data?.user?.permissionObject?.DASHBOARD_VIEW;
+    navigate(hasDashboard ? "/dashboard" : "/home");
   };
 
   const { mutate: loginMutation, isPending } = useMutation({

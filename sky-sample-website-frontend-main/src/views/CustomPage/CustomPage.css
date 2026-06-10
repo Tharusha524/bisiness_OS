@@ -80,12 +80,33 @@
 .save-msg.error { color: #dc2626; }
 
 .custom-table-wrapper {
-    overflow-x: auto;
+    overflow-x: scroll;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
     background-color: white;
     border: 1px solid var(--color-border-light);
     border-radius: 8px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     margin-bottom: 24px;
+}
+
+.custom-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.custom-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 0 0 8px 8px;
+}
+
+.custom-table-wrapper::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 4px;
+}
+
+.custom-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
 }
 
 .custom-kpi-table {

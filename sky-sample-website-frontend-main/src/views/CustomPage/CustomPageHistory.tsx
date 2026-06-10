@@ -122,8 +122,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
                                     <thead>
                                         <tr>
                                             <th>SHIFT</th>
-                                            <th>NO</th>
-                                            <th>MC</th>
+                                            <th>NO MC</th>
                                             <th>OPERATORS</th>
                                             <th>ITEM</th>
                                             <th>TARGET<br/>(QTY)</th>
@@ -149,12 +148,19 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
                                                             <strong>{shift}</strong>
                                                         </td>
                                                     )}
-                                                    <td className="no-cell"><strong>{no}</strong></td>
-                                                    
-                                                    {Object.keys(initialRowState).map((field) => (
+                                                    <td className="no-cell">
+                                                        <input
+                                                            type="text"
+                                                            value={tableData[rowKey]?.mc || ''}
+                                                            disabled={true}
+                                                            style={{ width: '55px' }}
+                                                        />
+                                                    </td>
+
+                                                    {Object.keys(initialRowState).filter(f => f !== 'mc').map((field) => (
                                                         <td key={field}>
-                                                            <input 
-                                                                type={['mc','item'].includes(field) ? "text" : "number"}
+                                                            <input
+                                                                type={['item', 'operators'].includes(field) ? "text" : "number"}
                                                                 value={tableData[rowKey]?.[field] || ''}
                                                                 disabled={true}
                                                             />
@@ -165,7 +171,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
                                         })}
                                         <tr className="total-row">
                                             <td colSpan={2} className="total-label">Total</td>
-                                            {Object.keys(initialRowState).map(field => (
+                                            {Object.keys(initialRowState).filter(f => f !== 'mc').map(field => (
                                                 <td key={field} className="total-value">
                                                     {calcTotal(field)}
                                                 </td>

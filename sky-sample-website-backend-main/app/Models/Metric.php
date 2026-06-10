@@ -25,6 +25,6 @@ class Metric extends Model
 
     public function latestDailyValue()
     {
-        return $this->hasOne(MetricDailyValue::class)->latestOfMany();
+        return $this->hasOne(MetricDailyValue::class)->latestOfMany('data_date');
     }
 }

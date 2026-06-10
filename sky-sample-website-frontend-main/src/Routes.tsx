@@ -362,23 +362,6 @@ const AppRoutes = () => {
           )}
         />
 
-        {/* Normal User Dashboard Routes */}
-        <Route
-          path="/user-dashboard"
-          element={withLayout(
-            UserLayout,
-            Dashboard,
-            !canAccess(PermissionKeys.DASHBOARD_VIEW)
-          )}
-        />
-        <Route
-          path="/user-report"
-          element={withLayout(
-            UserLayout,
-            Report,
-            !canAccess(PermissionKeys.REPORT_VIEW)
-          )}
-        />
         <Route
           path="/user-input"
           element={withLayout(

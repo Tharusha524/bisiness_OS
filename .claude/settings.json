@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push *)",
+      "Bash(git count-objects *)",
+      "Bash(git config *)",
+      "Bash(git fetch *)",
+      "Bash(git gc *)",
+      "Bash(gh auth *)",
+      "Bash(python -c \"import docx; print\\('docx ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(python generate_api_doc.py)",
+      "Read(//c//**)",
+      "PowerShell(cd \"e:\\\\bisiness_OS-main\\\\sky-sample-website-backend-main\"; E:\\\\xampp\\\\php\\\\php.exe artisan tinker --execute=\"DB::table\\('com_permissions'\\)->select\\('id','userType'\\)->get\\(\\)->each\\(function\\(\\\\$r\\){ echo \\\\$r->id . ' => ' . \\\\$r->userType . PHP_EOL; }\\);\")"
+    ]
+  }
+}

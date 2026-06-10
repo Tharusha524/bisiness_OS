@@ -135,10 +135,18 @@ class AdminController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
+        $userType = $user->userType;
+
         // Revoke all Sanctum tokens so access is immediately cut
         $user->tokens()->delete();
 
         $user->delete();
+
+        // If no other users share this userType, remove the individual permission record too
+        $remaining = \App\Models\User::where('userType', $userType)->count();
+        if ($remaining === 0) {
+            \App\Models\ComPermission::where('userType', $userType)->delete();
+        }
 
         return response()->json(['message' => 'User deleted successfully'], 200);
     }

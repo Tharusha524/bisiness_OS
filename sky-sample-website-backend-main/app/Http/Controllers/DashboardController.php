@@ -7,6 +7,42 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    private function evaluateRule($value, $ruleStr): string
+    {
+        if (!$ruleStr) return 'grey';
+        $rule = json_decode($ruleStr, true);
+        if (!$rule || empty($rule['type']) || $rule['type'] === 'None' || empty($rule['config'])) return 'grey';
+
+        $rawVal = floatval(preg_replace('/[^0-9.-]/', '', (string) $value));
+        $config = $rule['config'];
+
+        switch ($rule['type']) {
+            case 'Min':
+                $min = floatval($config['value'] ?? 0);
+                $warn = isset($config['warning']) && $config['warning'] !== '' ? floatval($config['warning']) : null;
+                if ($rawVal < $min) return 'red';
+                if ($warn !== null && $rawVal <= $warn) return 'orange';
+                return 'green';
+            case 'Max':
+                $max = floatval($config['value'] ?? 0);
+                $warn = isset($config['warning']) && $config['warning'] !== '' ? floatval($config['warning']) : null;
+                if ($rawVal > $max) return 'red';
+                if ($warn !== null && $rawVal >= $warn) return 'orange';
+                return 'green';
+            case 'Range':
+                if ($rawVal < floatval($config['min'] ?? 0) || $rawVal > floatval($config['max'] ?? 0)) return 'red';
+                return 'green';
+            case 'Target':
+                $goal = floatval($config['value'] ?? 0);
+                if ($goal == 0) return 'grey';
+                $pct = ($rawVal / $goal) * 100;
+                if ($pct < 80) return 'red';
+                if ($pct < 100) return 'orange';
+                return 'green';
+        }
+        return 'grey';
+    }
+
     /**
      * Show the dashboard page.
      */
@@ -30,8 +66,9 @@ class DashboardController extends Controller
                 // If standard metrics is empty, use defaults or fallback
                 $metricsData = $standardMetrics->map(fn($m) => [
                     'id' => $m->id,
-                    'label' => strtoupper($m->name), 
-                    'value' => $m->value,
+                    'label' => strtoupper($m->name),
+                    'value' => $m->latestDailyValue?->value ?? $m->value,
+                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
                     'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
                 ])->values()->toArray();
 
@@ -43,7 +80,7 @@ class DashboardController extends Controller
                     'badge' => $absenteeism ? [
                         'metricId' => $absenteeism->id,
                         'label' => strtoupper($absenteeism->name),
-                        'value' => $absenteeism->value,
+                        'value' => $absenteeism->latestDailyValue?->value ?? $absenteeism->value,
                         'type' => 'danger',
                         'note' => $absenteeism->latestDailyValue ? $absenteeism->latestDailyValue->notes : null
                     ] : null
@@ -52,14 +89,25 @@ class DashboardController extends Controller
                 // Find alert/unavailability metric
                 $unavailability = $metrics->first(fn($m) => str_contains(strtolower($m->name), 'unavailability') || str_contains(strtolower($m->name), 'spare'));
 
+                // All other metrics (not the unavailability/spare alert)
+                $standardMetrics = $metrics->filter(fn($m) => !str_contains(strtolower($m->name), 'unavailability') && !str_contains(strtolower($m->name), 'spare'));
+                $metricsData = $standardMetrics->map(fn($m) => [
+                    'id' => $m->id,
+                    'label' => strtoupper($m->name),
+                    'value' => $m->latestDailyValue?->value ?? $m->value,
+                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
+                    'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
+                ])->values()->toArray();
+
                 $formatted[] = [
                     'id' => $system->id,
                     'name' => $system->name,
                     'type' => 'stores',
+                    'metrics' => $metricsData,
                     'alert' => $unavailability ? [
                         'metricId' => $unavailability->id,
                         'label' => strtoupper($unavailability->name),
-                        'value' => $unavailability->value,
+                        'value' => $unavailability->latestDailyValue?->value ?? $unavailability->value,
                         'note' => $unavailability->latestDailyValue ? $unavailability->latestDailyValue->notes : null
                     ] : null,
                     'status' => 'System Optimal'
@@ -72,8 +120,9 @@ class DashboardController extends Controller
                 $responseTimes = $metrics->filter(fn($m) => !str_contains(strtolower($m->name), 'accident'));
                 $metricsData = $responseTimes->map(fn($m) => [
                     'id' => $m->id,
-                    'label' => strtoupper($m->name), 
-                    'value' => $m->value,
+                    'label' => strtoupper($m->name),
+                    'value' => $m->latestDailyValue?->value ?? $m->value,
+                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
                     'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
                 ])->values()->toArray();
 
@@ -84,7 +133,7 @@ class DashboardController extends Controller
                     'badge' => $accidents ? [
                         'metricId' => $accidents->id,
                         'label' => strtoupper($accidents->name),
-                        'value' => $accidents->value,
+                        'value' => $accidents->latestDailyValue?->value ?? $accidents->value,
                         'type' => 'success',
                         'note' => $accidents->latestDailyValue ? $accidents->latestDailyValue->notes : null
                     ] : null,
@@ -93,8 +142,9 @@ class DashboardController extends Controller
             } elseif (str_contains($nameLower, 'maintenance')) {
                 $metricsData = $metrics->map(fn($m) => [
                     'id' => $m->id,
-                    'label' => strtoupper($m->name), 
-                    'value' => $m->value,
+                    'label' => strtoupper($m->name),
+                    'value' => $m->latestDailyValue?->value ?? $m->value,
+                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
                     'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
                 ])->values()->toArray();
 
@@ -108,8 +158,9 @@ class DashboardController extends Controller
                 // Fallback default structure for newly added custom systems
                 $metricsData = $metrics->map(fn($m) => [
                     'id' => $m->id,
-                    'label' => strtoupper($m->name), 
-                    'value' => $m->value,
+                    'label' => strtoupper($m->name),
+                    'value' => $m->latestDailyValue?->value ?? $m->value,
+                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
                     'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
                 ])->values()->toArray();
 

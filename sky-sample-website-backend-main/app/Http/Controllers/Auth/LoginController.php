@@ -60,11 +60,16 @@ class LoginController extends Controller
             'login_at' => now(),
         ]);
 
+        $permObj = $user->comPermission?->permissionObject ?? [];
+
         return response()->json([
             'message' => 'Login successful',
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user' => $user->only(['id', 'name', 'email', 'role', 'mobile', 'isCompanyEmployee', 'jobPosition', 'department'])
+            'user' => array_merge(
+                $user->only(['id', 'name', 'email', 'role', 'mobile', 'isCompanyEmployee', 'jobPosition', 'department']),
+                ['permissionObject' => $permObj]
+            )
         ], 201);
     }
 
@@ -99,11 +104,16 @@ class LoginController extends Controller
             'login_at' => now(),
         ]);
 
+        $permObj = $user->comPermission?->permissionObject ?? [];
+
         return response()->json([
             'message' => 'Login successful',
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user' => $user->only(['id', 'name', 'email', 'role', 'mobile', 'isCompanyEmployee', 'jobPosition', 'department'])
+            'user' => array_merge(
+                $user->only(['id', 'name', 'email', 'role', 'mobile', 'isCompanyEmployee', 'jobPosition', 'department']),
+                ['permissionObject' => $permObj]
+            )
         ], 201);
     }
 

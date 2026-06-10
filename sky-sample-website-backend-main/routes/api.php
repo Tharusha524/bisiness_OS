@@ -249,9 +249,9 @@ Route::middleware('auth:sanctum')->group(function () {
         
     // ── Custom Page Dashboard ────────────────────────────────────────────────
     Route::get('/custom-dashboard/history', [CustomDashboardController::class, 'history'])
-        ->middleware('permission:CUSTOM_PAGE_VIEW');
+        ->middleware('permission:CUSTOM_PAGE_VIEW,PRODUCTION_DASHBOARD_VIEW');
     Route::get('/custom-dashboard', [CustomDashboardController::class, 'index'])
-        ->middleware('permission:CUSTOM_PAGE_VIEW');
+        ->middleware('permission:CUSTOM_PAGE_VIEW,PRODUCTION_DASHBOARD_VIEW');
     Route::post('/custom-dashboard', [CustomDashboardController::class, 'store'])
         ->middleware('permission:CUSTOM_PAGE_EDIT');
 });

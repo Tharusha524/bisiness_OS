@@ -371,7 +371,8 @@ export default function SystemDetails() {
     const sortedByValue = [...chartData].sort((a, b) => b.value - a.value);
     const topItem = sortedByValue[0] || null;
     const rule = parseRule(activeMetric?.rule);
-    const ruleStatus = getRuleStatus(activeMetric?.value, rule);
+    const currentValue = activeMetric?.latestDailyValue?.value ?? activeMetric?.value;
+    const ruleStatus = getRuleStatus(currentValue, rule);
     const barChartHeight = Math.max(200, chartData.length * 50 + 60);
 
     return (
@@ -431,7 +432,7 @@ export default function SystemDetails() {
                                 {/* Total Value */}
                                 <div className="kpi-stat-card">
                                     <div className="kpi-stat-label">CURRENT VALUE</div>
-                                    <div className="kpi-stat-value">{activeMetric.value || '—'}</div>
+                                    <div className="kpi-stat-value">{(activeMetric.latestDailyValue?.value ?? activeMetric.value) || '—'}</div>
                                     <div className="kpi-stat-sub">
                                         {activeMetricItems.length} subcategor{activeMetricItems.length !== 1 ? 'ies' : 'y'} recorded
                                     </div>
@@ -799,7 +800,7 @@ export default function SystemDetails() {
                                                     TOTAL
                                                 </td>
                                                 <td style={{ padding: '12px', fontWeight: 800, color: '#0f3c2b' }}>
-                                                    {activeMetric.value || '—'}
+                                                    {(activeMetric.latestDailyValue?.value ?? activeMetric.value) || '—'}
                                                 </td>
                                                 <td style={{ padding: '12px', fontWeight: 700, color: '#64748b', fontSize: '0.82rem' }}>
                                                     100%

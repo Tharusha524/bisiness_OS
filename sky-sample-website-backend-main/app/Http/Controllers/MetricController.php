@@ -15,7 +15,7 @@ class MetricController extends Controller
     public function index($systemId)
     {
         $system = System::findOrFail($systemId);
-        return response()->json($system->metrics()->orderBy('id', 'asc')->get());
+        return response()->json($system->metrics()->with('latestDailyValue')->orderBy('id', 'asc')->get());
     }
 
     /**
@@ -108,20 +108,24 @@ class MetricController extends Controller
             }
         }
         
-        // Update metric value total
-        $sum = $metric->metricItems()->sum('value');
-        $formattedValue = number_format($sum);
-        $type = strtolower($metric->type);
-        $unit = $metric->unit;
+        // Only auto-calculate value from sub-items when the metric actually has sub-items.
+        // For simple metrics (no sub-items), leave the value untouched so data-entry saves are preserved.
+        $itemCount = $metric->metricItems()->count();
+        if ($itemCount > 0) {
+            $sum = $metric->metricItems()->sum('value');
+            $formattedValue = number_format($sum);
+            $type = strtolower($metric->type);
+            $unit = $metric->unit;
 
-        if ($type === 'currency') {
-            $formattedValue = ($unit ? $unit . ' ' : 'Rs. ') . $formattedValue;
-        } elseif ($type === 'percentage') {
-            $formattedValue = $sum . '%';
-        } elseif ($unit) {
-            $formattedValue = $formattedValue . ' ' . $unit;
+            if ($type === 'currency') {
+                $formattedValue = ($unit ? $unit . ' ' : 'Rs. ') . $formattedValue;
+            } elseif ($type === 'percentage') {
+                $formattedValue = $sum . '%';
+            } elseif ($unit) {
+                $formattedValue = $formattedValue . ' ' . $unit;
+            }
+
+            $metric->updateQuietly(['value' => (string) $formattedValue]);
         }
-        
-        $metric->updateQuietly(['value' => (string) $formattedValue]);
     }
 }
