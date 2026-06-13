@@ -11,7 +11,11 @@
       "Bash(pip install *)",
       "Bash(python generate_api_doc.py)",
       "Read(//c//**)",
-      "PowerShell(cd \"e:\\\\bisiness_OS-main\\\\sky-sample-website-backend-main\"; E:\\\\xampp\\\\php\\\\php.exe artisan tinker --execute=\"DB::table\\('com_permissions'\\)->select\\('id','userType'\\)->get\\(\\)->each\\(function\\(\\\\$r\\){ echo \\\\$r->id . ' => ' . \\\\$r->userType . PHP_EOL; }\\);\")"
+      "PowerShell(cd \"e:\\\\bisiness_OS-main\\\\sky-sample-website-backend-main\"; E:\\\\xampp\\\\php\\\\php.exe artisan tinker --execute=\"DB::table\\('com_permissions'\\)->select\\('id','userType'\\)->get\\(\\)->each\\(function\\(\\\\$r\\){ echo \\\\$r->id . ' => ' . \\\\$r->userType . PHP_EOL; }\\);\")",
+      "Bash(grep -n \"activeMetric\\\\|setActiveMetric\\\\|metrics\\\\b\\\\|api\\\\.get\\\\|\\\\/metrics\\\\b\" src/views/SystemDashboard/SystemDetails.jsx)",
+      "Bash(grep -n \"profile-update\\\\|profileImage\\\\|profile_image\\\\|\\\\/user\\\\b\" \"e:\\\\bisiness_OS-main\\\\sky-sample-website-backend-main\\\\routes\\\\api.php\")",
+      "Bash(cat .env)",
+      "Bash(cat .env.local)"
     ]
   }
 }

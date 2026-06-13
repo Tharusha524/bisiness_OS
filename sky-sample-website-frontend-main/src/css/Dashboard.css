@@ -515,6 +515,50 @@
     transition: var(--transition-fast);
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 16px 12px;
+    }
+
+    .dashboard-title {
+        font-size: 1.4rem;
+    }
+
+    .systems-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .system-card {
+        padding: 16px;
+    }
+
+    .metrics-grid-2x2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .metric-value {
+        font-size: 1.1rem;
+    }
+
+    .card-action-btn {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .topbar {
+        padding: 0 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics-grid-2x2 {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Print Styles */
 @media print {
     .sidebar {

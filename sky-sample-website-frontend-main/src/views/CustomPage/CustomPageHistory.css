@@ -110,6 +110,11 @@
     padding: 24px;
     max-height: 100%;
     overflow-y: auto;
+    overflow-x: auto;
+    min-width: 0;
+    box-sizing: border-box;
+    width: 100%;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS/mobile */
 }
 
 .empty-state {

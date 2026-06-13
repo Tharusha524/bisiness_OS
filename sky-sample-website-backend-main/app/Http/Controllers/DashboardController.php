@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\System;
+use App\Models\MetricDailyValue;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -43,139 +44,39 @@ class DashboardController extends Controller
         return 'grey';
     }
 
-    /**
-     * Show the dashboard page.
-     */
     public function index()
     {
-        // Eager load systems with their metrics from the database
-        $dbSystems = System::with('metrics.latestDailyValue')->orderBy('id', 'asc')->get();
+        $dbSystems = System::with('metrics')->orderBy('id', 'asc')->get();
         $formatted = [];
 
         foreach ($dbSystems as $system) {
-            $nameLower = strtolower($system->name);
-            $metrics = $system->metrics;
-            
-            if (str_contains($nameLower, 'finance')) {
-                // Find absenteeism badge metric
-                $absenteeism = $metrics->first(fn($m) => str_contains(strtolower($m->name), 'absenteeism'));
-                
-                // Other standard metrics
-                $standardMetrics = $metrics->filter(fn($m) => !str_contains(strtolower($m->name), 'absenteeism'));
+            $metricsData = $system->metrics->map(function ($m) {
+                $latestEntry = MetricDailyValue::where('metric_id', $m->id)
+                    ->whereNotNull('value')
+                    ->orderBy('data_date', 'desc')
+                    ->first();
 
-                // If standard metrics is empty, use defaults or fallback
-                $metricsData = $standardMetrics->map(fn($m) => [
-                    'id' => $m->id,
-                    'label' => strtoupper($m->name),
-                    'value' => $m->latestDailyValue?->value ?? $m->value,
-                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
-                    'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
-                ])->values()->toArray();
+                $displayValue = $latestEntry ? $latestEntry->value : $m->value;
+                $displayNote  = $latestEntry ? $latestEntry->notes : null;
 
-                $formatted[] = [
-                    'id' => $system->id,
-                    'name' => $system->name,
-                    'type' => 'finance',
-                    'metrics' => $metricsData,
-                    'badge' => $absenteeism ? [
-                        'metricId' => $absenteeism->id,
-                        'label' => strtoupper($absenteeism->name),
-                        'value' => $absenteeism->latestDailyValue?->value ?? $absenteeism->value,
-                        'type' => 'danger',
-                        'note' => $absenteeism->latestDailyValue ? $absenteeism->latestDailyValue->notes : null
-                    ] : null
+                return [
+                    'id'     => $m->id,
+                    'label'  => strtoupper($m->name),
+                    'value'  => $displayValue,
+                    'status' => $this->evaluateRule($displayValue, $m->rule),
+                    'note'   => $displayNote,
                 ];
-            } elseif (str_contains($nameLower, 'store')) {
-                // Find alert/unavailability metric
-                $unavailability = $metrics->first(fn($m) => str_contains(strtolower($m->name), 'unavailability') || str_contains(strtolower($m->name), 'spare'));
+            })->values()->toArray();
 
-                // All other metrics (not the unavailability/spare alert)
-                $standardMetrics = $metrics->filter(fn($m) => !str_contains(strtolower($m->name), 'unavailability') && !str_contains(strtolower($m->name), 'spare'));
-                $metricsData = $standardMetrics->map(fn($m) => [
-                    'id' => $m->id,
-                    'label' => strtoupper($m->name),
-                    'value' => $m->latestDailyValue?->value ?? $m->value,
-                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
-                    'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
-                ])->values()->toArray();
-
-                $formatted[] = [
-                    'id' => $system->id,
-                    'name' => $system->name,
-                    'type' => 'stores',
-                    'metrics' => $metricsData,
-                    'alert' => $unavailability ? [
-                        'metricId' => $unavailability->id,
-                        'label' => strtoupper($unavailability->name),
-                        'value' => $unavailability->latestDailyValue?->value ?? $unavailability->value,
-                        'note' => $unavailability->latestDailyValue ? $unavailability->latestDailyValue->notes : null
-                    ] : null,
-                    'status' => 'System Optimal'
-                ];
-            } elseif (str_contains($nameLower, 'health') || str_contains($nameLower, 'safety')) {
-                // Find accidents metric
-                $accidents = $metrics->first(fn($m) => str_contains(strtolower($m->name), 'accident'));
-                
-                // Other standard metrics (e.g. response time)
-                $responseTimes = $metrics->filter(fn($m) => !str_contains(strtolower($m->name), 'accident'));
-                $metricsData = $responseTimes->map(fn($m) => [
-                    'id' => $m->id,
-                    'label' => strtoupper($m->name),
-                    'value' => $m->latestDailyValue?->value ?? $m->value,
-                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
-                    'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
-                ])->values()->toArray();
-
-                $formatted[] = [
-                    'id' => $system->id,
-                    'name' => $system->name,
-                    'type' => 'healthSafety',
-                    'badge' => $accidents ? [
-                        'metricId' => $accidents->id,
-                        'label' => strtoupper($accidents->name),
-                        'value' => $accidents->latestDailyValue?->value ?? $accidents->value,
-                        'type' => 'success',
-                        'note' => $accidents->latestDailyValue ? $accidents->latestDailyValue->notes : null
-                    ] : null,
-                    'metrics' => $metricsData
-                ];
-            } elseif (str_contains($nameLower, 'maintenance')) {
-                $metricsData = $metrics->map(fn($m) => [
-                    'id' => $m->id,
-                    'label' => strtoupper($m->name),
-                    'value' => $m->latestDailyValue?->value ?? $m->value,
-                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
-                    'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
-                ])->values()->toArray();
-
-                $formatted[] = [
-                    'id' => $system->id,
-                    'name' => $system->name,
-                    'type' => 'maintenance',
-                    'metrics' => $metricsData
-                ];
-            } else {
-                // Fallback default structure for newly added custom systems
-                $metricsData = $metrics->map(fn($m) => [
-                    'id' => $m->id,
-                    'label' => strtoupper($m->name),
-                    'value' => $m->latestDailyValue?->value ?? $m->value,
-                    'status' => $this->evaluateRule($m->latestDailyValue?->value ?? $m->value, $m->rule),
-                    'note' => $m->latestDailyValue ? $m->latestDailyValue->notes : null
-                ])->values()->toArray();
-
-                $formatted[] = [
-                    'id' => $system->id,
-                    'name' => $system->name,
-                    'type' => 'default',
-                    'metrics' => $metricsData,
-                    'status' => 'System Operational'
-                ];
-            }
+            $formatted[] = [
+                'id'      => $system->id,
+                'name'    => $system->name,
+                'metrics' => $metricsData,
+            ];
         }
 
         return response()->json([
-            'systems' => $formatted
+            'systems' => $formatted,
         ]);
     }
 }

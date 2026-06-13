@@ -1,6 +1,7 @@
 import React, { Suspense, useMemo } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import MainLayout from "./components/Layout/MainLayout";
+import FullScreenLayout from "./components/Layout/FullScreenLayout";
 import PageLoader from "./components/PageLoader";
 import useCurrentUser from "./hooks/useCurrentUser";
 import { PermissionKeys } from "./views/Administration/SectionList";
@@ -176,11 +177,11 @@ const AppRoutes = () => {
           )}
         />
 
-        {/* Custom Page */}
+        {/* Custom Page - full screen for wide table */}
         <Route
           path="/custom-page"
           element={withLayout(
-            MainLayout,
+            FullScreenLayout,
             CustomPage,
             !canAccess(PermissionKeys.CUSTOM_PAGE_VIEW)
           )}
@@ -273,10 +274,11 @@ const AppRoutes = () => {
             !canAccess(PermissionKeys.DASHBOARD_VIEW)
           )}
         />
+        {/* Production Dashboard - full screen for wide table */}
         <Route
           path="/production-dashboard"
           element={withLayout(
-            MainLayout,
+            FullScreenLayout,
             ProductionDashboard,
             !canAccess(PermissionKeys.PRODUCTION_DASHBOARD_VIEW)
           )}

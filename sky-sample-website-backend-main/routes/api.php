@@ -141,8 +141,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('user-change-password', [UserController::class, 'changePassword'])
         ->middleware('permission:USER_SETTING_EDIT');
-    Route::post('user/{id}/profile-update', [UserController::class, 'profileUpdate'])
-        ->middleware('permission:USER_SETTING_EDIT');
+    Route::post('user/{id}/profile-update', [UserController::class, 'profileUpdate']);
     Route::post('user/{id}/email-change', [UserController::class, 'emailChangeInitiate'])
         ->middleware('permission:USER_SETTING_EDIT');
     Route::post('user/{id}/email-change-verify', [UserController::class, 'emailChangeVerify'])

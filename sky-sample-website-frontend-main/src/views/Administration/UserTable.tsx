@@ -24,7 +24,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import theme from "../../theme";
 import PageTitle from "../../components/PageTitle";
 import Breadcrumb from "../../components/BreadCrumb";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import ViewDataDrawer, { DrawerHeader } from "../../components/ViewDataDrawer";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import { useSnackbar } from "notistack";
@@ -75,6 +75,13 @@ function UserTable() {
     queryKey: ["users"],
     queryFn: fetchAllUsers,
   });
+
+  useEffect(() => {
+    if (selectedRow && usersData) {
+      const updated = (usersData as User[]).find(u => u.id === selectedRow.id);
+      if (updated) setSelectedRow(updated);
+    }
+  }, [usersData]);
 
   const { data: roles = [] } = useQuery({
     queryKey: ["access-roles"],

@@ -151,7 +151,8 @@ export default function UserInputForm() {
                 if (metricItems.length > 0 && dv.item_values) {
                     setItemValues(dv.item_values);
                 } else if (dv.value !== null && dv.value !== undefined) {
-                    const numeric = parseFloat(String(dv.value).replace(/[^0-9.-]+/g, ''));
+                    const match = String(dv.value).match(/-?\d+(\.\d+)?/);
+                    const numeric = match ? parseFloat(match[0]) : NaN;
                     setSingleValue(isNaN(numeric) ? '' : String(numeric));
                 }
                 setNotes(dv.notes || '');

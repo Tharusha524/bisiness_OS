@@ -39,11 +39,8 @@ function ViewUserContent({ selectedUser }: { selectedUser: User }) {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setImagePreview(URL.createObjectURL(file));
+      profileUpdateMutation({ id: selectedUser.id, imageFile: file });
     }
   };
 
@@ -174,20 +171,8 @@ function ViewUserContent({ selectedUser }: { selectedUser: User }) {
             </CustomButton>
           )}
 
-          {imageFile && (
-            <CustomButton
-              variant="contained"
-              onClick={saveImage}
-              sx={{ mt: 2, backgroundColor: "var(--pallet-blue)" }}
-              disabled={isPending}
-              endIcon={
-                isPending && (
-                  <CircularProgress size={20} sx={{ color: "gray" }} />
-                )
-              }
-            >
-              Save
-            </CustomButton>
+          {isPending && (
+            <CircularProgress size={24} sx={{ mt: 2, color: "var(--pallet-blue)" }} />
           )}
         </Box>
       </Box>

@@ -167,9 +167,10 @@ class UserController extends Controller
         }
 
         $existingImages = is_array($user->profileImage)
-        ? $user->profileImage
-        : json_decode($user->profileImage, true) ?? [];
+            ? $user->profileImage
+            : json_decode($user->profileImage, true) ?? [];
 
+        // ✅ FIX 1: Handle "Remove Photo" button
         if ($request->boolean('clearImage')) {
             foreach ($existingImages as $uri) {
                 $this->profileImageService->deleteImageFromGCS($uri);
@@ -184,7 +185,13 @@ class UserController extends Controller
             }
         }
 
+        // ✅ FIX 2: Handle "Change Profile Image" — clear old images first, then save new one
         if ($request->hasFile('profileImage')) {
+            foreach ($existingImages as $uri) {
+                $this->profileImageService->deleteImageFromGCS($uri);
+            }
+            $existingImages = [];
+
             foreach ($request->file('profileImage') as $file) {
                 $uploadResult = $this->profileImageService->uploadImageToGCS($file);
                 if ($uploadResult && isset($uploadResult['gsutil_uri'])) {
@@ -196,7 +203,7 @@ class UserController extends Controller
         $user->name         = $request->input('name', $user->name);
         $user->mobile       = $request->input('mobile', $user->mobile);
         $user->gender       = $request->input('gender', $user->gender);
-        $user->profileImage = $existingImages;
+        $user->profileImage = array_values($existingImages); // ✅ FIX 3: Re-index array cleanly
 
         $user->themePreference      = $request->input('themePreference', $user->themePreference);
         $user->defaultLandingPage   = $request->input('defaultLandingPage', $user->defaultLandingPage);

@@ -117,7 +117,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
                     <div className="empty-state">No data found for this date.</div>
                 ) : (
                     <div className="read-only-dashboard">
-                        <div className="custom-table-wrapper" style={{ overflowX: 'auto', width: '100%' }}>
+                        <div className="custom-table-wrapper">
                             <table className="custom-kpi-table">
                                     <thead>
                                         <tr>
