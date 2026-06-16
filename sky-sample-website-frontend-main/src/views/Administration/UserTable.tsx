@@ -33,7 +33,7 @@ import { getAccessRolesList, createAccessRole } from "../../api/accessManagement
 import ViewUserContent from "./ViewUserContent";
 import EditUserRoleDialog from "./EditUserRoleDialog";
 
-import { PermissionKeys } from "./SectionList";
+import { PermissionKeys, defaultViewerPermissions } from "./SectionList";
 import useCurrentUserHaveAccess from "../../hooks/useCurrentUserHaveAccess";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { green, grey } from "@mui/material/colors";
@@ -165,168 +165,168 @@ function UserTable() {
       >
         <PageTitle title="Users" />
         <Breadcrumb breadcrumbs={breadcrumbItems} />
-        
+
       </Box>
       <Stack sx={{ alignItems: "center", width: "100%" }}>
         <TableContainer
-            component={Paper}
-            elevation={2}
-            sx={{
-              overflowX: "auto",
-              maxWidth: isMobile ? "88vw" : "100%",
-            }}
-          >
-            {isUserDataFetching && <LinearProgress sx={{ width: "100%" }} />}
-            <Table aria-label="simple table">
-              <TableHead sx={{ backgroundColor: "var(--pallet-lighter-blue)" }}>
-                <TableRow>
-                  <TableCell>Id</TableCell>
-                  <TableCell align="left">Name</TableCell>
-                  <TableCell align="left">Email</TableCell>
-                  <TableCell align="left">Role</TableCell>
-                  <TableCell align="right">Job Position</TableCell>
-                  <TableCell align="center">Access</TableCell>
-                  <TableCell align="center">Status</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {paginatedUsersData?.length > 0 ? (
-                  paginatedUsersData?.map((row) => (
-                    <TableRow
-                      key={`${row.id}`}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setSelectedRow(row);
-                        setOpenViewDrawer(true);
-                      }}
-                    >
-                      <TableCell align="left">{row.id}</TableCell>
-                      <TableCell align="left">{row.name}</TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">{row.userType?.userType}</TableCell>
-                      <TableCell align="right">
-                        {row.jobPosition ?? "--"}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.userType?.id === 2 ? (
-                          <Button
-                            size="small"
-                            variant="contained"
-                            startIcon={grantingUserId === row.id ? <CircularProgress size={16} color="inherit" /> : <LockOpenIcon fontSize="small" />}
-                            onClick={async (e) => {
-                              e.stopPropagation();
-                              setGrantingUserId(row.id);
-                              
-                              try {
-                                let targetRole = (roles as any[]).find(r => r.userType?.toLowerCase() === row.name?.toLowerCase());
-                                
-                                if (!targetRole) {
-                                  const baselineRole = (roles as any[]).find(r => r.userType?.toLowerCase() === 'user') || (roles as any[]).find(r => r.id !== 1 && r.id !== 2);
-                                  
-                                  const newRolePayload = {
-                                    userType: row.name,
-                                    description: `Custom access role for ${row.name}`,
-                                    permissionObject: baselineRole ? baselineRole.permissionObject : {}
-                                  };
-                                  
-                                  targetRole = await createAccessRole(newRolePayload as any);
-                                }
-                                
-                                grantAccessMutation({ id: row.id, userTypeId: targetRole.id });
-                                
-                              } catch (error) {
-                                enqueueSnackbar("Failed to grant custom access", { variant: "error" });
-                                setGrantingUserId(null);
-                              }
-                            }}
-                            disabled={!canEditUsers || grantingUserId === row.id}
-                            sx={{
-                              backgroundColor: "#e65100",
-                              fontSize: "0.75rem",
-                              textTransform: "none",
-                              "&:hover": { backgroundColor: "#bf360c" },
-                            }}
-                          >
-                            Give Access
-                          </Button>
-                        ) : (
-                          <Chip
-                            label="Access Assigned"
-                            size="small"
-                            sx={{
-                              backgroundColor: green[50],
-                              color: green[700],
-                              border: `1px solid ${green[300]}`,
-                            }}
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.availability ? (
-                          <Chip
-                            label="Active"
-                            sx={{
-                              backgroundColor: green[100],
-                              color: green[800],
-                            }}
-                          />
-                        ) : (
-                          <Chip
-                            label="Inactive"
-                            sx={{
-                              backgroundColor: grey[100],
-                              color: grey[800],
-                            }}
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+          component={Paper}
+          elevation={2}
+          sx={{
+            overflowX: "auto",
+            maxWidth: isMobile ? "88vw" : "100%",
+          }}
+        >
+          {isUserDataFetching && <LinearProgress sx={{ width: "100%" }} />}
+          <Table aria-label="simple table">
+            <TableHead sx={{ backgroundColor: "var(--pallet-lighter-blue)" }}>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Email</TableCell>
+                <TableCell align="left">Role</TableCell>
+                <TableCell align="right">Job Position</TableCell>
+                <TableCell align="center">Access</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedUsersData?.length > 0 ? (
+                paginatedUsersData?.map((row) => (
+                  <TableRow
+                    key={`${row.id}`}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      setSelectedRow(row);
+                      setOpenViewDrawer(true);
+                    }}
+                  >
+                    <TableCell align="left">{row.id}</TableCell>
+                    <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">{row.userType?.userType}</TableCell>
+                    <TableCell align="right">
+                      {row.jobPosition ?? "--"}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.userType?.id === 2 ? (
                         <Button
                           size="small"
-                          variant="outlined"
-                          color="error"
-                          disabled={!canEditUsers}
-                          onClick={(e) => {
+                          variant="contained"
+                          startIcon={grantingUserId === row.id ? <CircularProgress size={16} color="inherit" /> : <LockOpenIcon fontSize="small" />}
+                          onClick={async (e) => {
                             e.stopPropagation();
-                            setSelectedRow(row);
-                            setDeleteDialogOpen(true);
+                            setGrantingUserId(row.id);
+
+                            try {
+                              let targetRole = (roles as any[]).find(r => r.userType?.toLowerCase() === row.name?.toLowerCase());
+
+                              if (!targetRole) {
+                                const baselineRole = (roles as any[]).find(r => r.userType?.toLowerCase() === 'user') || (roles as any[]).find(r => r.id !== 1 && r.id !== 2);
+
+                                const newRolePayload = {
+                                  userType: row.name,
+                                  description: `Custom access role for ${row.name}`,
+                                  permissionObject: defaultViewerPermissions
+                                };
+
+                                targetRole = await createAccessRole(newRolePayload as any);
+                              }
+
+                              grantAccessMutation({ id: row.id, userTypeId: targetRole.id });
+
+                            } catch (error) {
+                              enqueueSnackbar("Failed to grant custom access", { variant: "error" });
+                              setGrantingUserId(null);
+                            }
                           }}
-                          sx={{ minWidth: 0, padding: "4px 8px" }}
+                          disabled={!canEditUsers || grantingUserId === row.id}
+                          sx={{
+                            backgroundColor: "#e65100",
+                            fontSize: "0.75rem",
+                            textTransform: "none",
+                            "&:hover": { backgroundColor: "#bf360c" },
+                          }}
                         >
-                          <DeleteOutlineIcon fontSize="small" />
+                          Give Access
                         </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={11} align="center">
-                      <Typography variant="body2">No Users found</Typography>
+                      ) : (
+                        <Chip
+                          label="Access Assigned"
+                          size="small"
+                          sx={{
+                            backgroundColor: green[50],
+                            color: green[700],
+                            border: `1px solid ${green[300]}`,
+                          }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.availability ? (
+                        <Chip
+                          label="Active"
+                          sx={{
+                            backgroundColor: green[100],
+                            color: green[800],
+                          }}
+                        />
+                      ) : (
+                        <Chip
+                          label="Inactive"
+                          sx={{
+                            backgroundColor: grey[100],
+                            color: grey[800],
+                          }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="center" onClick={(e) => e.stopPropagation()}>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color="error"
+                        disabled={!canEditUsers}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedRow(row);
+                          setDeleteDialogOpen(true);
+                        }}
+                        sx={{ minWidth: 0, padding: "4px 8px" }}
+                      >
+                        <DeleteOutlineIcon fontSize="small" />
+                      </Button>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
+                ))
+              ) : (
                 <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                    colSpan={100}
-                    count={usersData?.length ?? 0}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    showFirstButton={true}
-                    showLastButton={true}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
+                  <TableCell colSpan={11} align="center">
+                    <Typography variant="body2">No Users found</Typography>
+                  </TableCell>
                 </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={100}
+                  count={usersData?.length ?? 0}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  showFirstButton={true}
+                  showLastButton={true}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
 
       </Stack>
       <ViewDataDrawer
@@ -343,10 +343,10 @@ function UserTable() {
                 setOpenEditUserRoleDialog(true);
               }}
               disableEdit={!canEditUsers}
-              // onDelete={() => setDeleteDialogOpen(true)}
-              // disableDelete={
-              //   !useCurrentUserHaveAccess(PermissionKeys.ADMIN_USERS_DELETE)
-              // }
+            // onDelete={() => setDeleteDialogOpen(true)}
+            // disableDelete={
+            //   !useCurrentUserHaveAccess(PermissionKeys.ADMIN_USERS_DELETE)
+            // }
             />
 
             {selectedRow && (

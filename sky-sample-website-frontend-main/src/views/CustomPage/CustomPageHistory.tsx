@@ -33,7 +33,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
     const [specialNotes, setSpecialNotes] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const canView = user?.permissionObject?.[PermissionKeys.CUSTOM_PAGE_VIEW];
+    const canView = user?.permissionObject?.[PermissionKeys.PRODUCTION_DASHBOARD_VIEW];
 
     useEffect(() => {
         if (!canView || !selectedDate) return;

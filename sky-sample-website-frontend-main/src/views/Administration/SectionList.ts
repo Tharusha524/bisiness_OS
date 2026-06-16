@@ -317,7 +317,7 @@ export const defaultAdminPermissions = Object.values(PermissionKeys).reduce(
 );
 
 export const defaultViewerPermissions: PermissionKeysObject = {
-  INSIGHT_VIEW: false,
+  INSIGHT_VIEW: true,
   ADMIN_USERS_VIEW: false,
   ADMIN_USERS_EDIT: false,
   ADMIN_USERS_DELETE: false,
@@ -329,20 +329,20 @@ export const defaultViewerPermissions: PermissionKeysObject = {
   CUSTOM_PAGE_VIEW: false,
   CUSTOM_PAGE_EDIT: false,
   
-  DASHBOARD_VIEW: true,
-  PRODUCTION_DASHBOARD_VIEW: true,
-  INPUT_DATA_VIEW: true,
+  DASHBOARD_VIEW: false,
+  PRODUCTION_DASHBOARD_VIEW: false,
+  INPUT_DATA_VIEW: false,
   SETTINGS_VIEW: false,
   SYSTEM_SETUP_VIEW: false,
   SYSTEM_SETUP_EDIT: false,
-  REPORT_VIEW: true,
+  REPORT_VIEW: false,
   USER_SETTING_VIEW: false,
   USER_SETTING_EDIT: false,
   COMPANY_SETTING_VIEW: false,
   COMPANY_SETTING_EDIT: false,
 
-  INPUT_PAGE_VIEW: true,
-  INPUT_PAGE_EDIT: true,
+  INPUT_PAGE_VIEW: false,
+  INPUT_PAGE_EDIT: false,
 
   CHEMICAL_MNG_REQUEST_REGISTER_CREATE: false,
   CHEMICAL_MNG_REQUEST_REGISTER_EDIT: false,
