@@ -29,7 +29,7 @@ function PendingAccessPage() {
         minHeight: "100vh",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#f5f7fa",
+        backgroundColor: "var(--color-bg-primary)",
         padding: 4,
         gap: 3,
       }}
@@ -38,7 +38,7 @@ function PendingAccessPage() {
 
       <Box
         sx={{
-          backgroundColor: "white",
+          backgroundColor: "var(--color-bg-card)",
           borderRadius: 3,
           boxShadow: 3,
           padding: 6,

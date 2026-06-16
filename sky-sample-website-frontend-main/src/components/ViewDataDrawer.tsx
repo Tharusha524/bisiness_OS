@@ -196,7 +196,7 @@ export function DrawerContentItem({
     >
       <Typography
         variant="caption"
-        sx={{ paddingBottom: 0, color: "var(--pallet-grey)" }}
+        sx={{ paddingBottom: 0, color: "var(--color-text-muted)" }}
       >
         {label}
       </Typography>

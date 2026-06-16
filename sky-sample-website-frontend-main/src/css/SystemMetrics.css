@@ -80,6 +80,17 @@
     stroke-width: 2;
 }
 
+.metric-icon-box {
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="dark"] .metric-icon-box {
+    color: #ffffff;
+}
+
 /* Text Detail Group */
 .metric-text-details {
     display: flex;

@@ -32,9 +32,10 @@ const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     return (
       <div
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: "var(--color-bg-card)",
+          color: "var(--color-text-primary)",
           padding: "10px",
-          border: "1px solid #ccc",
+          border: "1px solid var(--color-border-light)",
         }}
       >
         <p>{`${payload[0].name}: ${payload[0].value}`}</p>

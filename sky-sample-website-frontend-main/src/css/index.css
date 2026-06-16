@@ -8,6 +8,9 @@
     --color-bg-metric: #e8eff9;
     --color-bg-metric-green: #a2f872;
     --color-bg-metric-red: #ffe5e5;
+    --color-bg-metric-orange: #ffedd5;
+    --color-bg-metric-hover: #dde8f5;
+    --color-bg-card-hover: #f8fafc;
 
     --color-text-brand: #0f3c2b;
     --color-text-primary: #1e293b;
@@ -15,6 +18,7 @@
     --color-text-muted: #64748b;
     --color-text-green: #0f3c2b;
     --color-text-red: #c53030;
+    --color-text-orange: #9a3412;
 
     --color-border-card: #a3b899;
     --color-border-light: #e2e8f0;
@@ -52,15 +56,17 @@
     --color-bg-metric: #1e3a5f;
     --color-bg-metric-green: #1a3a2a;
     --color-bg-metric-red: #3b1c1c;
+    --color-bg-metric-orange: #4a2e10;
     --color-bg-metric-hover: #253d5e;
     --color-bg-card-hover: #253548;
 
     --color-text-brand: #a2f872;
     --color-text-primary: #f1f5f9;
     --color-text-secondary: #94a3b8;
-    --color-text-muted: #64748b;
+    --color-text-muted: #94a3b8;
     --color-text-green: #a2f872;
     --color-text-red: #f87171;
+    --color-text-orange: #fb923c;
 
     --color-border-card: #334155;
     --color-border-light: #334155;
@@ -74,13 +80,15 @@
     --pallet-main-blue: var(--color-text-primary);
     --pallet-blue: var(--color-accent-blue);
     --pallet-lighter-grey: var(--color-bg-card-hover);
-    --pallet-grey: var(--color-border-card);
+    --pallet-grey: var(--color-text-muted);
 }
 
-/* Light-mode-only extras referenced via var() — set defaults for light mode */
-:root {
-    --color-bg-metric-hover: #dde8f5;
-    --color-bg-card-hover: #f8fafc;
+/* Native date/month/time picker icons default to black — invert them in dark mode app-wide */
+[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="month"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 /* Global Reset & Base Styles */

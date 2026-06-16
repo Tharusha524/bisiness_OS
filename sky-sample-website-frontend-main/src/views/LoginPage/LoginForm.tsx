@@ -15,7 +15,7 @@ import {
   Button
 } from "@mui/material";
 import { useState } from "react";
-import companyLogo from "../../assets/company-logo1.jpg";
+import companyLogo from "../../assets/dio-logo.png";
 import { useForm } from "react-hook-form";
 import CustomButton from "../../components/CustomButton";
 import LoginIcon from "@mui/icons-material/Login";
@@ -110,8 +110,8 @@ function LoginForm() {
         marginBottom: isMdUp ? "2.5rem" : "22vh",
       }}
     >
-      <Box>
-        <img src={companyLogo} alt="logo" height={"65em"} />
+      <Box sx={{ marginTop: "1.5rem", marginLeft: "0rem", marginBottom: "-5rem" }}>
+        <img src={companyLogo} alt="logo" height={"150em"} />
       </Box>
       <Box>
         <Typography variant={"body2"}>

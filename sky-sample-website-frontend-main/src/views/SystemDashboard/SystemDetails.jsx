@@ -55,8 +55,10 @@ const getFallbackSuggestions = (metricName) => {
     ];
 };
 
-// Chart color palette (forest green spectrum)
-const CHART_COLORS = ['#0f3c2b', '#1a6644', '#2a9d6b', '#4db882', '#82f25b', '#154c37', '#228051'];
+// Chart color palette (forest green spectrum) — light mode
+const CHART_COLORS_LIGHT = ['#0f3c2b', '#1a6644', '#2a9d6b', '#4db882', '#82f25b', '#154c37', '#228051'];
+// Brighter palette for dark mode so bars/slices stand out against the dark background
+const CHART_COLORS_DARK = ['#4ade80', '#34d399', '#6ee7b7', '#a7f3d0', '#86efac', '#2dd4bf', '#5eead4'];
 
 const parseNumericValue = (val) => {
     if (!val && val !== 0) return 0;
@@ -222,6 +224,11 @@ export default function SystemDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useCurrentUser();
+
+    const isDarkMode = !user || !user.themePreference || user.themePreference === 'System'
+        ? (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        : user.themePreference.toLowerCase() === 'dark';
+    const CHART_COLORS = isDarkMode ? CHART_COLORS_DARK : CHART_COLORS_LIGHT;
 
     const { data: orgData } = useQuery({
         queryKey: ['organization'],
@@ -506,7 +513,7 @@ export default function SystemDetails() {
                                                             type="number"
                                                             axisLine={false}
                                                             tickLine={false}
-                                                            tick={{ fontSize: 10, fill: '#64748b' }}
+                                                            tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
                                                             tickFormatter={v =>
                                                                 v >= 1000000 ? `${(v / 1000000).toFixed(1)}M`
                                                                     : v >= 1000 ? `${(v / 1000).toFixed(0)}K`
@@ -518,7 +525,7 @@ export default function SystemDetails() {
                                                             dataKey="name"
                                                             axisLine={false}
                                                             tickLine={false}
-                                                            tick={{ fontSize: 11, fill: '#1e293b', fontWeight: 600 }}
+                                                            tick={{ fontSize: 11, fill: 'var(--color-text-primary)', fontWeight: 600 }}
                                                             width={115}
                                                         />
                                                         <Tooltip content={<ChartTooltip metric={activeMetric} orgData={orgData} total={total} />} />
@@ -643,8 +650,8 @@ export default function SystemDetails() {
                                                     <AreaChart data={chartHistoryData} margin={{ top: 8, right: 20, left: 0, bottom: 4 }}>
                                                         <defs>
                                                             <linearGradient id="histGrad" x1="0" y1="0" x2="0" y2="1">
-                                                                <stop offset="5%"  stopColor="#154c37" stopOpacity={0.18} />
-                                                                <stop offset="95%" stopColor="#154c37" stopOpacity={0} />
+                                                                <stop offset="5%"  stopColor={isDarkMode ? '#4ade80' : '#154c37'} stopOpacity={0.18} />
+                                                                <stop offset="95%" stopColor={isDarkMode ? '#4ade80' : '#154c37'} stopOpacity={0} />
                                                             </linearGradient>
                                                         </defs>
                                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
@@ -669,16 +676,16 @@ export default function SystemDetails() {
                                                         <Tooltip
                                                             formatter={val => [formatItemValue(val, activeMetric, orgData), activeMetric.name]}
                                                             labelStyle={{ fontWeight: 700, color: '#1e293b', fontSize: 12 }}
-                                                            contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }}
+                                                            contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12, backgroundColor: '#ffffff' }}
                                                         />
                                                         <Area
                                                             type="monotone"
                                                             dataKey="value"
-                                                            stroke="#154c37"
+                                                            stroke={isDarkMode ? '#4ade80' : '#154c37'}
                                                             strokeWidth={2.5}
                                                             fill="url(#histGrad)"
-                                                            dot={{ r: 3, fill: '#154c37', strokeWidth: 0 }}
-                                                            activeDot={{ r: 5, fill: '#154c37' }}
+                                                            dot={{ r: 3, fill: isDarkMode ? '#4ade80' : '#154c37', strokeWidth: 0 }}
+                                                            activeDot={{ r: 5, fill: isDarkMode ? '#4ade80' : '#154c37' }}
                                                         />
                                                     </AreaChart>
                                                 </ResponsiveContainer>
@@ -703,7 +710,7 @@ export default function SystemDetails() {
                                 return (
                                     <div className="details-card" style={{ marginBottom: '24px' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                                            <svg width="16" height="16" fill="none" stroke="#154c37" strokeWidth="2" viewBox="0 0 24 24">
+                                            <svg width="16" height="16" fill="none" stroke="var(--color-accent-green)" strokeWidth="2" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                             <h5 className="trend-card-title" style={{ margin: 0 }}>SPECIAL NOTES</h5>
@@ -763,9 +770,9 @@ export default function SystemDetails() {
                                     </thead>
                                     <tbody>
                                         {loadingItems ? (
-                                            <tr><td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: '#64748b' }}>Loading…</td></tr>
+                                            <tr><td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: 'var(--color-text-muted)' }}>Loading…</td></tr>
                                         ) : activeMetricItems.length === 0 ? (
-                                            <tr><td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: '#64748b' }}>No subcategories found for this metric.</td></tr>
+                                            <tr><td colSpan="4" style={{ textAlign: 'center', padding: '20px', color: 'var(--color-text-muted)' }}>No subcategories found for this metric.</td></tr>
                                         ) : (
                                             sortedByValue.map((item, idx) => {
                                                 const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : '—';
@@ -777,15 +784,15 @@ export default function SystemDetails() {
                                                             </span>
                                                         </td>
                                                         <td>{item.fullName}</td>
-                                                        <td style={{ color: '#0f3c2b', fontWeight: 700 }}>
+                                                        <td style={{ color: 'var(--color-text-green)', fontWeight: 700 }}>
                                                             {formatItemValue(item.rawValue, activeMetric, orgData)}
                                                         </td>
                                                         <td>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                                <div style={{ flex: 1, height: 6, background: '#f1f5f9', borderRadius: 99, overflow: 'hidden', minWidth: 60 }}>
+                                                                <div style={{ flex: 1, height: 6, background: 'var(--color-bg-input)', borderRadius: 99, overflow: 'hidden', minWidth: 60 }}>
                                                                     <div style={{ height: '100%', width: `${total > 0 ? (item.value / total) * 100 : 0}%`, background: CHART_COLORS[idx % CHART_COLORS.length], borderRadius: 99 }} />
                                                                 </div>
-                                                                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569', minWidth: 38 }}>{pct}%</span>
+                                                                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-secondary)', minWidth: 38 }}>{pct}%</span>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -795,14 +802,14 @@ export default function SystemDetails() {
                                     </tbody>
                                     {activeMetricItems.length > 0 && (
                                         <tfoot>
-                                            <tr style={{ borderTop: '2px solid #e2e8f0' }}>
-                                                <td colSpan="2" style={{ padding: '12px', fontWeight: 700, color: '#374151', fontSize: '0.88rem' }}>
+                                            <tr style={{ borderTop: '2px solid var(--color-border-light)' }}>
+                                                <td colSpan="2" style={{ padding: '12px', fontWeight: 700, color: 'var(--color-text-primary)', fontSize: '0.88rem' }}>
                                                     TOTAL
                                                 </td>
-                                                <td style={{ padding: '12px', fontWeight: 800, color: '#0f3c2b' }}>
+                                                <td style={{ padding: '12px', fontWeight: 800, color: 'var(--color-text-green)' }}>
                                                     {(activeMetric.latestDailyValue?.value ?? activeMetric.value) || '—'}
                                                 </td>
-                                                <td style={{ padding: '12px', fontWeight: 700, color: '#64748b', fontSize: '0.82rem' }}>
+                                                <td style={{ padding: '12px', fontWeight: 700, color: 'var(--color-text-muted)', fontSize: '0.82rem' }}>
                                                     100%
                                                 </td>
                                             </tr>
@@ -838,13 +845,13 @@ export default function SystemDetails() {
                                 </div>
 
                                 {!aiRequested && !suggestionsLoading && (
-                                    <div style={{ textAlign: 'center', padding: '20px 0', color: '#64748b', fontSize: '0.88rem', fontWeight: 500 }}>
+                                    <div style={{ textAlign: 'center', padding: '20px 0', color: 'var(--color-text-muted)', fontSize: '0.88rem', fontWeight: 500 }}>
                                         Click the "Ask AI" button above to generate intelligent insights for this KPI.
                                     </div>
                                 )}
 
                                 {suggestionsLoading && (
-                                    <div style={{ textAlign: 'center', padding: '28px 0', color: '#64748b', fontSize: '0.88rem', fontWeight: 600 }}>
+                                    <div style={{ textAlign: 'center', padding: '28px 0', color: 'var(--color-text-muted)', fontSize: '0.88rem', fontWeight: 600 }}>
                                         <div className="spinner" style={{ width: 24, height: 24, border: '2px solid rgba(15,60,43,0.1)', borderTopColor: '#154c37', margin: '0 auto 10px' }}></div>
                                         Generating AI suggestions…
                                     </div>

@@ -204,7 +204,7 @@ function TabPanelPage() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#fff",
+            backgroundColor: "var(--color-bg-card)",
             flex: { lg: 3, md: 1 },
             borderRadius: "0.3rem",
           }}
@@ -214,7 +214,7 @@ function TabPanelPage() {
             sx={{
               display: "flex",
               flexDirection: "row",
-              backgroundColor: "#fff",
+              backgroundColor: "var(--color-bg-card)",
               flex: { lg: 3, md: 1 },
               borderRadius: "0.3rem",
             }}
@@ -308,7 +308,7 @@ function TabPanelPage() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#fff",
+            backgroundColor: "var(--color-bg-card)",
             flex: { lg: 3, md: 1 },
             borderRadius: "0.3rem",
           }}
@@ -318,7 +318,7 @@ function TabPanelPage() {
             sx={{
               display: "flex",
               flexDirection: "row",
-              backgroundColor: "#fff",
+              backgroundColor: "var(--color-bg-card)",
               flex: { lg: 3, md: 1 },
               borderRadius: "0.3rem",
             }}
@@ -407,7 +407,7 @@ function TabPanelPage() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#fff",
+            backgroundColor: "var(--color-bg-card)",
             flex: { lg: 3, md: 1 },
             borderRadius: "0.3rem",
           }}

@@ -112,6 +112,10 @@
     border-radius: var(--radius-full);
 }
 
+[data-theme="dark"] .system-accent-bar {
+    background-color: var(--color-accent-green);
+}
+
 .system-item-name {
     margin-left: 12px;
     font-size: 1.1rem;

@@ -293,7 +293,7 @@ export default function AddOrEditChemicalRequestDialog({
             sx={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#fff",
+              backgroundColor: "var(--color-bg-card)",
               flex: 3,
               boxShadow: "0 0 10px rgba(0,0,0,0.1)",
               padding: "0.5rem",
@@ -720,7 +720,7 @@ export default function AddOrEditChemicalRequestDialog({
               display: "flex",
               flex: 1,
               flexDirection: "column",
-              backgroundColor: "#fff",
+              backgroundColor: "var(--color-bg-card)",
               boxShadow: "0 0 10px rgba(0,0,0,0.1)",
               padding: "0.5rem",
               borderRadius: "0.3rem",

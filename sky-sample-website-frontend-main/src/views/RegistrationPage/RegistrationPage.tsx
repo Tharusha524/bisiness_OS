@@ -6,9 +6,10 @@ import RegistrationForm from "./RegistrationForm";
 import useCurrentUser from "../../hooks/useCurrentUser";
 import PageLoader from "../../components/PageLoader";
 import { useNavigate } from "react-router";
-import index1 from "../../assets/new1.png";
-import index2 from "../../assets/new2.png";
 import index3 from "../../assets/new3.png";
+import index4 from "../../assets/Untitled design (2).png";
+import index5 from "../../assets/Untitled design (3).png";
+import index6 from "../../assets/Untitled design (4).png";
 import { useEffect } from "react";
 
 function RegistrationPage() {
@@ -52,9 +53,10 @@ function RegistrationPage() {
         >
           <ImageCarousel
             images={[
-              { src: index1, alt: "Welcome" },
-              { src: index2, alt: "Health & Safety" },
               { src: index3, alt: "Employee Engagement" },
+              { src: index4, alt: "Welcome" },
+              { src: index5, alt: "Health & Safety" },
+              { src: index6, alt: "Business Insights" },
             ]}
           />
           <Typography
@@ -68,7 +70,7 @@ function RegistrationPage() {
               textAlign: "center",
             }}
           >
-            Sky Smart Technology
+            DIO Solutions
           </Typography>
           <Typography
             variant="subtitle2"
@@ -79,7 +81,7 @@ function RegistrationPage() {
               textAlign: "center",
             }}
           >
-            copyright © 2025 Sky Smart Technology, All Rights Reserved
+            Copyright © 2026 DIO Solutions, All Rights Reserved
           </Typography>
           <Typography
             variant="subtitle2"
@@ -92,10 +94,10 @@ function RegistrationPage() {
               marginBottom: "2rem",
             }}
           >
-            Our dedicated teams of engineers, architects, and tech consultants
-            are here to support your bold ideas, guide you through our
-            cutting-edge solutions, and provide answers to your technical and
-            business questions. Let's build smarter, together.
+            Welcome to your smarter way of running a business. Our Business OS
+            brings everything you need operations, teams, workflows, and
+            insights into one seamless platform built to help your business
+            grow.
           </Typography>
         </Stack>
         <Stack sx={{ flex: isMdUp ? 2 : 1, justifyContent: "center" }}>

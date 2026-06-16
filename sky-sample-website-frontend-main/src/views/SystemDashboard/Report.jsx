@@ -66,8 +66,8 @@ const STATUS_BADGE = (status) => ({
     style: {
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 600,
-        backgroundColor: status === 'green' ? 'var(--color-bg-metric-green)' : status === 'orange' ? '#ffedd5' : status === 'red' ? 'var(--color-bg-metric-red)' : 'var(--color-bg-input)',
-        color: status === 'green' ? '#166534' : status === 'orange' ? '#9a3412' : status === 'red' ? 'var(--color-text-red)' : 'var(--color-text-secondary)',
+        backgroundColor: status === 'green' ? 'var(--color-bg-metric-green)' : status === 'orange' ? 'var(--color-bg-metric-orange)' : status === 'red' ? 'var(--color-bg-metric-red)' : 'var(--color-bg-input)',
+        color: status === 'green' ? 'var(--color-text-green)' : status === 'orange' ? 'var(--color-text-orange)' : status === 'red' ? 'var(--color-text-red)' : 'var(--color-text-secondary)',
     }
 });
 

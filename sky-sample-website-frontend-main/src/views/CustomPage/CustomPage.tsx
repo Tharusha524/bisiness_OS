@@ -113,8 +113,8 @@ export default function CustomPage() {
             
             <div className="custom-page-header">
                 <div>
-                    <h1 style={{ color: '#1a6644', marginTop: '5px' }}>Daily KPI Dashboard</h1>
-                    <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: '5px' }}>
+                    <h1 className="custom-page-title" style={{ marginTop: '5px' }}>Daily KPI Dashboard</h1>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginTop: '5px' }}>
                         Every responsible officer must record the KPI values relevant to their department in this sheet at the end of the day.
                     </p>
                 </div>

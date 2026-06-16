@@ -23,7 +23,7 @@ import { registerUser } from "../../api/userApi";
 import { getOrganization } from "../../api/OrganizationSettings/organizationSettingsApi";
 import SwitchButton from "../../components/SwitchButton";
 import AutoCheckBox from "../../components/AutoCheckbox";
-import companyLogo from "../../assets/company-logo1.jpg";
+import companyLogo from "../../assets/dio-logo.png";
 
 //API Imports
 import { departmentSchema, fetchDepartmentData } from "../../api/departmentApi";
@@ -156,9 +156,8 @@ function RegistrationForm() {
         marginBottom: isMdUp ? "2.5rem" : "22vh",
       }}
     >
-      <Box>
-        <img src={companyLogo} alt="logo" height={"65em"} />
-        
+      <Box sx={{ marginTop: "1.5rem", marginLeft: "-4rem", marginBottom: "-5rem" }}>
+        <img src={companyLogo} alt="logo" height={"150em"} />
       </Box>
       <Box>
         <Typography variant={"body2"}>

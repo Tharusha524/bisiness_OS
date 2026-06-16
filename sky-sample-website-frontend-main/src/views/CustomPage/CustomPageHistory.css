@@ -13,7 +13,7 @@
 }
 
 .history-modal-content {
-    background: #f8fafc;
+    background: var(--color-bg-primary);
     width: 100%;
     max-width: 1200px;
     max-height: 90vh;
@@ -26,7 +26,7 @@
     background: transparent;
     border: none;
     font-size: 28px;
-    color: #64748b;
+    color: var(--color-text-muted);
     cursor: pointer;
     margin-left: 15px;
     line-height: 1;
@@ -39,7 +39,7 @@
 .history-header {
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--color-border-light);
 }
 
 .history-layout {
@@ -51,7 +51,7 @@
 
 .history-sidebar {
     width: 250px;
-    background: white;
+    background: var(--color-bg-card);
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     padding: 16px;
@@ -62,13 +62,13 @@
 
 .history-sidebar h3 {
     margin: 0 0 16px 0;
-    color: #1e293b;
+    color: var(--color-text-primary);
     font-size: 1rem;
     font-weight: 600;
 }
 
 .no-dates {
-    color: #94a3b8;
+    color: var(--color-text-muted);
     font-size: 0.9rem;
     font-style: italic;
 }
@@ -84,16 +84,16 @@
     margin-bottom: 8px;
     border-radius: 6px;
     cursor: pointer;
-    background: #f8fafc;
-    color: #475569;
+    background: var(--color-bg-input);
+    color: var(--color-text-secondary);
     font-weight: 500;
     transition: all 0.2s ease;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-border-light);
 }
 
 .date-list li:hover {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
+    background: var(--color-bg-card-hover);
+    border-color: var(--color-border-card);
 }
 
 .date-list li.active {
@@ -104,7 +104,7 @@
 
 .history-content {
     flex-grow: 1;
-    background: white;
+    background: var(--color-bg-card);
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     padding: 24px;
@@ -122,7 +122,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    color: #94a3b8;
+    color: var(--color-text-muted);
     font-size: 1.1rem;
     min-height: 300px;
 }
@@ -135,7 +135,7 @@
     color: #1a6644;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #f1f5f9;
+    border-bottom: 2px solid var(--color-border-light);
 }
 
 /* Ensure read-only inputs look nice */
@@ -143,7 +143,7 @@
 .read-only-dashboard textarea:disabled {
     background-color: transparent !important;
     border: none !important;
-    color: #1e293b !important;
+    color: var(--color-text-primary) !important;
     cursor: default !important;
     font-weight: 500;
     text-align: center;

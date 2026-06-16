@@ -86,8 +86,8 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
             <div className={`custom-page-container animate-fade-in${isModal ? " history-modal-content" : ""}`}>
                 <div className="custom-page-header">
                     <div>
-                        <h1 style={{ color: '#000000', marginTop: '5px' }}>Production System Overview</h1>
-                        <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: '5px' }}>
+                        <h1 style={{ color: 'var(--color-text-primary)', marginTop: '5px' }}>Production System Overview</h1>
+                        <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginTop: '5px' }}>
                             View production KPI records.
                         </p>
                     </div>

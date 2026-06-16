@@ -197,6 +197,12 @@
     box-shadow: 0 4px 12px rgba(5, 36, 22, 0.15);
 }
 
+[data-theme="dark"] .kpi-tab-btn.active {
+    background-color: var(--color-accent-green);
+    border-color: var(--color-accent-green);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
 /* Suggestions Card block */
 .details-card {
     background-color: var(--color-bg-card);

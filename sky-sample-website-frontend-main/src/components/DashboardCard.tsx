@@ -17,12 +17,12 @@ function DashboardCard({
   return (
     <Box
       sx={{
-        backgroundColor: "#fff",
+        backgroundColor: "var(--color-bg-card)",
         width: "100%",
         padding: "1rem",
         boxShadow: "0 0 10px rgba(0,0,0,0.1)",
         borderRadius: "0.3rem",
-        border: "1px solid var(--pallet-border-blue)", // Added border
+        border: "1px solid var(--color-border-light)", // Added border
       }}
     >
       <Box>
@@ -47,7 +47,7 @@ function DashboardCard({
               <Typography
                 variant="subtitle2"
                 sx={{
-                  color: "var(--pallet-text-primary)",
+                  color: "var(--color-text-primary)",
                 }}
               >
                 {title}
@@ -59,7 +59,7 @@ function DashboardCard({
         {caption && (
           <Typography
             variant="caption"
-            sx={{ color: "var(--pallet-text-secondary)" }}
+            sx={{ color: "var(--color-text-secondary)" }}
           >
             {caption}
           </Typography>
@@ -70,7 +70,7 @@ function DashboardCard({
           <Typography
             variant="h5"
             sx={{
-              color: "var(--pallet-blue)",
+              color: "var(--color-accent-blue)",
               marginX: "0.2rem",
               marginY: "0.4rem",
               fontWeight: 600,
@@ -84,7 +84,7 @@ function DashboardCard({
         {subDescription && (
           <Typography
             variant="caption"
-            sx={{ color: "var(--pallet-text-secondary)" }}
+            sx={{ color: "var(--color-text-secondary)" }}
           >
             {subDescription}
           </Typography>

@@ -8,9 +8,11 @@ import '../../css/SystemMetrics.css';
 export function getMetricIcon(iconName, className = "metric-icon") {
     if (iconName && iconName.startsWith('iconify:')) {
         const iconKey = iconName.replace('iconify:', '');
+        const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+        const iconColor = isDark ? 'a2f872' : '0f172a'; // match the bright green used by var(--color-text-brand) in dark mode
         return (
             <img
-                src={`https://api.iconify.design/${iconKey}.svg?color=%230f172a`}
+                src={`https://api.iconify.design/${iconKey}.svg?color=%23${iconColor}`}
                 alt={iconKey}
                 className={className}
                 width={22}
