@@ -162,13 +162,16 @@ export async function otpVerification({
 export async function resetPassword({
   email,
   password,
+  otp,
 }: {
   email: string;
   password: string;
+  otp: string;
 }) {
   const res = await api.post("/change-password", {
     email,
     password,
+    otp,
   });
   return res.data;
 }

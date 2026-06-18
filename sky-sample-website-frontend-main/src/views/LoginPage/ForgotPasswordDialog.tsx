@@ -84,7 +84,7 @@ function ForgotPasswordDialog({ open, handleClose }: { open: boolean; handleClos
     } else if (showOTPField) {
       otpVerificationMutation({ email: data.email, otp: data.otp });
     } else if (showPasswordFields) {
-      resetPasswordMutation({ email: data.email, password: data.password });
+      resetPasswordMutation({ email: data.email, password: data.password, otp: data.otp! });
     }
   };
 
@@ -93,7 +93,7 @@ function ForgotPasswordDialog({ open, handleClose }: { open: boolean; handleClos
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle>Don't Worry</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ color: "#525252" }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             We are here to help you recover your password. Enter the email associated with your account, and we'll send
             an email with instructions to reset your password.
           </Typography>

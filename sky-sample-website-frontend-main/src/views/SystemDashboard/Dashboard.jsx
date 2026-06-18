@@ -14,7 +14,7 @@ export default function Dashboard() {
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const { user } = useCurrentUser();
     const queryClient = useQueryClient();
-    
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -58,7 +58,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh', backgroundColor: 'var(--color-bg-primary)' }}>
                 <div style={{ textAlign: 'center' }}>
                     <div className="spinner" style={{ width: '40px', height: '40px', border: '3px solid var(--color-border-light)', borderTopColor: 'var(--color-accent-green)', margin: '0 auto 16px' }}></div>
-                    <p style={{ color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.95rem' }}>Loading Sky Smart systems...</p>
+                    <p style={{ color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: '0.95rem' }}>Loading systems...</p>
                 </div>
             </div>
         );
@@ -107,42 +107,42 @@ export default function Dashboard() {
                         const isAdmin = user?.permissionObject?.['SYSTEM_SETUP_EDIT'];
                         const visibleMetrics = system.metrics ? system.metrics.filter(metric => isAdmin || user?.permissionObject?.[`KPI_${metric.id}_VIEW`]) : [];
                         return (
-                        <div key={system.id} className="system-card">
-                            <div className="card-header">
-                                <div className="card-title-group">
-                                    <svg className="card-title-icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                    <h3 className="card-title">{system.name}</h3>
+                            <div key={system.id} className="system-card">
+                                <div className="card-header">
+                                    <div className="card-title-group">
+                                        <svg className="card-title-icon" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        <h3 className="card-title">{system.name}</h3>
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    <div className="metrics-grid-2x2">
+                                        {visibleMetrics.map((metric, idx) => (
+                                            <div key={idx} className="metric-block" style={{ position: 'relative' }}>
+                                                <span className="metric-label">{metric.label}</span>
+                                                <span className="metric-value" style={metric.status === 'red' ? { color: '#ef4444' } : undefined}>
+                                                    {formatDisplayValue(metric.value)}
+                                                </span>
+                                                {metric.note && (
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>
+                                                        * {metric.note}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button
+                                        className="card-action-btn"
+                                        onClick={() => navigate(`/system-details/${system.id}`)}
+                                    >
+                                        View Details
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
-                            <div className="card-body">
-                                <div className="metrics-grid-2x2">
-                                    {visibleMetrics.map((metric, idx) => (
-                                        <div key={idx} className="metric-block" style={{ position: 'relative' }}>
-                                            <span className="metric-label">{metric.label}</span>
-                                            <span className="metric-value" style={metric.status === 'red' ? { color: '#ef4444' } : undefined}>
-                                                {formatDisplayValue(metric.value)}
-                                            </span>
-                                            {metric.note && (
-                                                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>
-                                                    * {metric.note}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                                <button
-                                    className="card-action-btn"
-                                    onClick={() => navigate(`/system-details/${system.id}`)}
-                                >
-                                    View Details
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
                         );
                     })}
                 </div>

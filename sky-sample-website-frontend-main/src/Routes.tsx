@@ -181,7 +181,7 @@ const AppRoutes = () => {
         <Route
           path="/custom-page"
           element={withLayout(
-            FullScreenLayout,
+            MainLayout,
             CustomPage,
             !canAccess(PermissionKeys.CUSTOM_PAGE_VIEW)
           )}
@@ -278,7 +278,7 @@ const AppRoutes = () => {
         <Route
           path="/production-dashboard"
           element={withLayout(
-            FullScreenLayout,
+            MainLayout,
             ProductionDashboard,
             !canAccess(PermissionKeys.PRODUCTION_DASHBOARD_VIEW)
           )}

@@ -368,7 +368,7 @@ export default function MainLayout({ children, sidebarConfig }: Props) {
           <DrawerContent handleDrawerClose={handleDrawerClose} sidebarConfig={sidebarConfig || sidebarItems} organizationName={organizationName} logoUrl={logoUrl} />
         </Drawer>
       )}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, "@media print": { p: 0 } }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, minWidth: 0, overflowX: "hidden", "@media print": { p: 0 } }}>
         <DrawerHeader sx={{ "@media print": { display: "none" } }} />
         {children}
       </Box>
@@ -454,17 +454,17 @@ const DrawerContent = ({
         </IconButton>
       </Box>
       <Divider sx={{ marginBottom: "1rem", backgroundColor: "#7db0ff" }} />
-        <Box
-          sx={{
-            height: "calc(100vh - 75px)",
-            overflowY: "auto",
-            paddingLeft: 0,
-            overflowX: "hidden",
-          }}
-        >
-          {activeSidebarConfig.map((item, i) => {
-            if (item?.accessKey && !userPermissionObject?.[`${item?.accessKey}`])
-              return null;
+      <Box
+        sx={{
+          height: "calc(100vh - 75px)",
+          overflowY: "auto",
+          paddingLeft: 0,
+          overflowX: "hidden",
+        }}
+      >
+        {activeSidebarConfig.map((item, i) => {
+          if (item?.accessKey && !userPermissionObject?.[`${item?.accessKey}`])
+            return null;
 
           if (item?.headline) {
             return (
@@ -715,8 +715,8 @@ export const LinkButton = React.memo(
               color: disabled
                 ? "grey"
                 : isMatch
-                ? "var(--pallet-orange)"
-                : "#fff",
+                  ? "var(--pallet-orange)"
+                  : "#fff",
             }}
           >
             {icon}
@@ -728,8 +728,8 @@ export const LinkButton = React.memo(
               color: disabled
                 ? "grey"
                 : isMatch
-                ? "var(--pallet-orange)"
-                : "#fff",
+                  ? "var(--pallet-orange)"
+                  : "#fff",
             }}
           >
             {title}

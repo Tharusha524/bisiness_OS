@@ -36,7 +36,7 @@ class SendPasswordChangeConfirmation extends Notification
     {
         return (new MailMessage)
             ->subject('Your OTP for Password Change')
-            ->markdown('mail.forgot_password.forgot-password-notification', [
+            ->view('mail.forgot_password.forgot-password-notification', [
                 'otp'              => $this->otp,
                 'email'            => $this->email,
                 'name'             => $this->name,

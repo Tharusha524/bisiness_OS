@@ -25,7 +25,9 @@ const initialTableData = {
     'A1': { ...initialRowState },
     'A2': { ...initialRowState },
     'B1': { ...initialRowState },
-    'B2': { ...initialRowState }
+    'B2': { ...initialRowState },
+    'TR1': { ...initialRowState },
+    'TR2': { ...initialRowState }
 };
 
 export default function CustomPage() {
@@ -95,7 +97,7 @@ export default function CustomPage() {
     };
 
     const calcTotal = (field: string) => {
-        const rows = ['A1', 'A2', 'B1', 'B2'];
+        const rows = ['A1', 'A2', 'B1', 'B2', 'TR1', 'TR2'];
         let total = 0;
         let isNumeric = false;
         rows.forEach(r => {
@@ -110,7 +112,7 @@ export default function CustomPage() {
 
     return (
         <div className="custom-page-container animate-fade-in">
-            
+
             <div className="custom-page-header">
                 <div>
                     <h1 className="custom-page-title" style={{ marginTop: '5px' }}>Daily KPI Dashboard</h1>
@@ -121,16 +123,16 @@ export default function CustomPage() {
                 <div className="custom-page-actions">
                     <div className="date-picker-group">
                         <label>Date:</label>
-                        <input 
-                            type="date" 
-                            value={date} 
-                            onChange={(e) => setDate(e.target.value)} 
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
                             className="custom-date-input"
                         />
                     </div>
                     {canEdit && (
-                        <button 
-                            className="custom-save-btn" 
+                        <button
+                            className="custom-save-btn"
                             onClick={handleSave}
                             disabled={saving || loading}
                         >
@@ -155,27 +157,28 @@ export default function CustomPage() {
                                 <th>No MC</th>
                                 <th>Operators</th>
                                 <th>Item</th>
-                                <th>Target<br/>(Qty)</th>
-                                <th>Actual<br/>Production<br/>(Qty)</th>
-                                <th>Normal<br/>Production<br/>Allowance (Rs)</th>
-                                <th>Additional<br/>Production<br/>(Qty)</th>
-                                <th>Additional<br/>Production<br/>Allowance (Rs)</th>
-                                <th>No of<br/>BD<br/>(Qty)</th>
-                                <th>Down<br/>Time<br/>(Min.)</th>
-                                <th>Change<br/>Over Time<br/>(Min.)</th>
-                                <th>Damage<br/>Pkts<br/>(Qty)</th>
-                                <th>Tissue<br/>Wasted<br/>(Kg)</th>
+                                <th>Target<br />(Qty)</th>
+                                <th>Actual<br />Production<br />(Qty)</th>
+                                <th>Normal<br />Production<br />Allowance (Rs)</th>
+                                <th>Additional<br />Production<br />(Qty)</th>
+                                <th>Additional<br />Production<br />Allowance (Rs)</th>
+                                <th>No of<br />BD<br />(Qty)</th>
+                                <th>Down<br />Time<br />(Min.)</th>
+                                <th>Change<br />Over Time<br />(Min.)</th>
+                                <th>Damage<br />Pkts<br />(Qty)</th>
+                                <th>Tissue<br />Wasted<br />(Kg)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {['A1', 'A2', 'B1', 'B2'].map((rowKey, idx) => {
+                            {['A1', 'A2', 'B1', 'B2', 'TR1', 'TR2'].map((rowKey, idx) => {
                                 const row = (tableData as any)[rowKey];
                                 const isA = rowKey.startsWith('A');
+                                const isB = rowKey.startsWith('B');
                                 return (
                                     <tr key={rowKey}>
-                                        {(idx === 0 || idx === 2) && (
+                                        {(idx % 2 === 0) && (
                                             <td rowSpan={2} className="shift-cell">
-                                                <strong>{isA ? 'A' : 'B'}</strong>
+                                                <strong>{isA ? 'A' : (isB ? 'B' : 'T/R')}</strong>
                                             </td>
                                         )}
                                         <td className="no-cell">
@@ -215,7 +218,7 @@ export default function CustomPage() {
 
             <div className="custom-page-footer">
                 <label>Special Notes:</label>
-                <textarea 
+                <textarea
                     value={specialNotes}
                     onChange={(e) => setSpecialNotes(e.target.value)}
                     placeholder="Enter special notes here..."

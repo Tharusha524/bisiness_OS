@@ -28,7 +28,7 @@ interface CustomPageHistoryProps {
 
 export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
     const { user } = useCurrentUser();
-    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState<string>('');
     const [tableData, setTableData] = useState<any>(null);
     const [specialNotes, setSpecialNotes] = useState('');
     const [loading, setLoading] = useState(false);
@@ -36,17 +36,24 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
     const canView = user?.permissionObject?.[PermissionKeys.PRODUCTION_DASHBOARD_VIEW];
 
     useEffect(() => {
-        if (!canView || !selectedDate) return;
+        if (!canView) return;
+        // If selectedDate is empty, we still fetch, so the backend can return the latest date
         fetchDashboardData(selectedDate);
     }, [canView, selectedDate]);
 
     const fetchDashboardData = async (date: string) => {
         setLoading(true);
-        setSelectedDate(date);
+        if (date) setSelectedDate(date);
         try {
-            const res = await api.get(`/custom-dashboard?date=${date}`);
-            if (res.data && res.data.table_data) {
-                setTableData(res.data.table_data);
+            const url = date ? `/custom-dashboard?date=${date}` : `/custom-dashboard`;
+            const res = await api.get(url);
+            if (res.data) {
+                if (!date && res.data.date) {
+                    // Extract just the YYYY-MM-DD part to ensure the calendar input can read it
+                    const formattedDate = res.data.date.split('T')[0].split(' ')[0];
+                    setSelectedDate(formattedDate);
+                }
+                setTableData(res.data.table_data || null);
                 setSpecialNotes(res.data.special_notes || '');
             } else {
                 setTableData(null);
@@ -62,7 +69,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
 
     const calcTotal = (field: string) => {
         if (!tableData) return '';
-        const rows = ['A1', 'A2', 'B1', 'B2'];
+        const rows = ['A1', 'A2', 'B1', 'B2', 'TR1', 'TR2'];
         let total = 0;
         let isNumeric = false;
         rows.forEach(r => {
@@ -107,40 +114,40 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
                     </div>
                 </div>
 
-            <div className="history-content" style={{ marginTop: '20px' }}>
-                {loading ? (
-                    <div style={{ textAlign: 'center', padding: '50px' }}>
-                        <div className="spinner" style={{ width: '40px', height: '40px', border: '3px solid #e2e8f0', borderTopColor: '#1a6644', margin: '0 auto 16px' }}></div>
-                        <p>Loading data for {selectedDate}...</p>
-                    </div>
-                ) : !tableData ? (
-                    <div className="empty-state">No data found for this date.</div>
-                ) : (
-                    <div className="read-only-dashboard">
-                        <div className="custom-table-wrapper">
-                            <table className="custom-kpi-table">
+                <div className="history-content" style={{ marginTop: '20px' }}>
+                    {loading ? (
+                        <div style={{ textAlign: 'center', padding: '50px' }}>
+                            <div className="spinner" style={{ width: '40px', height: '40px', border: '3px solid #e2e8f0', borderTopColor: '#1a6644', margin: '0 auto 16px' }}></div>
+                            <p>Loading data for {selectedDate}...</p>
+                        </div>
+                    ) : !tableData ? (
+                        <div className="empty-state">No data found for this date.</div>
+                    ) : (
+                        <div className="read-only-dashboard">
+                            <div className="custom-table-wrapper">
+                                <table className="custom-kpi-table">
                                     <thead>
                                         <tr>
                                             <th>SHIFT</th>
                                             <th>NO MC</th>
                                             <th>OPERATORS</th>
                                             <th>ITEM</th>
-                                            <th>TARGET<br/>(QTY)</th>
-                                            <th>ACTUAL<br/>PRODUCTION<br/>(QTY)</th>
-                                            <th>NORMAL<br/>PRODUCTION<br/>ALLOWANCE<br/>(RS)</th>
-                                            <th>ADDITIONAL<br/>PRODUCTION<br/>(QTY)</th>
-                                            <th>ADDITIONAL<br/>PRODUCTION<br/>ALLOWANCE<br/>(RS)</th>
-                                            <th>NO OF<br/>BD<br/>(QTY)</th>
-                                            <th>DOWN<br/>TIME<br/>(MIN.)</th>
-                                            <th>CHANGE<br/>OVER TIME<br/>(MIN.)</th>
-                                            <th>DAMAGE<br/>PKTS<br/>(QTY)</th>
-                                            <th>TISSUE<br/>WASTED<br/>(KG)</th>
+                                            <th>TARGET<br />(QTY)</th>
+                                            <th>ACTUAL<br />PRODUCTION<br />(QTY)</th>
+                                            <th>NORMAL<br />PRODUCTION<br />ALLOWANCE<br />(RS)</th>
+                                            <th>ADDITIONAL<br />PRODUCTION<br />(QTY)</th>
+                                            <th>ADDITIONAL<br />PRODUCTION<br />ALLOWANCE<br />(RS)</th>
+                                            <th>NO OF<br />BD<br />(QTY)</th>
+                                            <th>DOWN<br />TIME<br />(MIN.)</th>
+                                            <th>CHANGE<br />OVER TIME<br />(MIN.)</th>
+                                            <th>DAMAGE<br />PKTS<br />(QTY)</th>
+                                            <th>TISSUE<br />WASTED<br />(KG)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {['A1', 'A2', 'B1', 'B2'].map((rowKey) => {
-                                            const shift = rowKey.charAt(0);
-                                            const no = rowKey.charAt(1);
+                                        {['A1', 'A2', 'B1', 'B2', 'TR1', 'TR2'].map((rowKey) => {
+                                            const shift = rowKey.startsWith('TR') ? 'T/R' : rowKey.charAt(0);
+                                            const no = rowKey.endsWith('1') ? '1' : '2';
                                             return (
                                                 <tr key={rowKey}>
                                                     {no === '1' && (
@@ -183,7 +190,7 @@ export default function CustomPageHistory({ onClose }: CustomPageHistoryProps) {
 
                             <div className="custom-page-footer" style={{ marginTop: '20px' }}>
                                 <label>Special Notes:</label>
-                                <textarea 
+                                <textarea
                                     value={specialNotes}
                                     disabled={true}
                                     rows={4}

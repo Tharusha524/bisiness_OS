@@ -10,13 +10,18 @@ class CustomDashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $date = $request->query('date', Carbon::today()->toDateString());
+        $date = $request->query('date');
         
-        $dashboard = CustomDashboard::whereRaw('DATE(`date`) = ?', [$date])->first();
+        if ($date) {
+            $dashboard = CustomDashboard::whereRaw('DATE(`date`) = ?', [$date])->first();
+        } else {
+            // Default to the latest filled dashboard
+            $dashboard = CustomDashboard::orderBy('date', 'desc')->first();
+        }
 
         if (!$dashboard) {
             return response()->json([
-                'date' => $date,
+                'date' => $date ?? Carbon::today()->toDateString(),
                 'table_data' => null,
                 'special_notes' => ''
             ]);
