@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
+import { formatDisplayValue } from '../../util/numbers.util';
 import api from '../../utils/api';
 import useCurrentUser from '../../hooks/useCurrentUser';
 import { getKpiAiSuggestions } from '../../api/kpiSuggestionApi';
@@ -439,7 +440,7 @@ export default function SystemDetails() {
                                 {/* Total Value */}
                                 <div className="kpi-stat-card">
                                     <div className="kpi-stat-label">CURRENT VALUE</div>
-                                    <div className="kpi-stat-value">{(activeMetric.latestDailyValue?.value ?? activeMetric.value) || '—'}</div>
+                                    <div className="kpi-stat-value">{formatDisplayValue(activeMetric.latestDailyValue?.value ?? activeMetric.value)}</div>
                                     <div className="kpi-stat-sub">
                                         {activeMetricItems.length} subcategor{activeMetricItems.length !== 1 ? 'ies' : 'y'} recorded
                                     </div>
@@ -807,7 +808,7 @@ export default function SystemDetails() {
                                                     TOTAL
                                                 </td>
                                                 <td style={{ padding: '12px', fontWeight: 800, color: 'var(--color-text-green)' }}>
-                                                    {(activeMetric.latestDailyValue?.value ?? activeMetric.value) || '—'}
+                                                    {formatDisplayValue(activeMetric.latestDailyValue?.value ?? activeMetric.value)}
                                                 </td>
                                                 <td style={{ padding: '12px', fontWeight: 700, color: 'var(--color-text-muted)', fontSize: '0.82rem' }}>
                                                     100%

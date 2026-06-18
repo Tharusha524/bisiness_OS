@@ -96,7 +96,8 @@ export default function UpdateUserProfile({
       }}
       PaperProps={{
         style: {
-          backgroundColor: grey[50],
+          backgroundColor: "var(--color-bg-card)",
+          color: "var(--color-text-primary)",
           minWidth: "500px",
         },
         component: "form",

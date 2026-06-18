@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { formatDisplayValue } from '../../util/numbers.util';
 import { useNavigate } from 'react-router';
 import api from '../../utils/api';
 import useCurrentUser from '../../hooks/useCurrentUser';
@@ -361,7 +362,7 @@ export default function Report() {
                                         <tr key={m.id} style={{ borderBottom: '1px solid var(--color-border-light)', color: 'var(--color-text-primary)' }}>
                                             <td style={{ padding: '12px 16px' }}>{m.systemName}</td>
                                             <td style={{ padding: '12px 16px', fontWeight: 500 }}>{m.name}</td>
-                                            <td style={{ padding: '12px 16px', fontWeight: 600 }}>{m.value || 'N/A'}</td>
+                                            <td style={{ padding: '12px 16px', fontWeight: 600 }}>{formatDisplayValue(m.value)}</td>
                                             <td style={{ padding: '12px 16px', color: 'var(--color-text-muted)' }}>{getRuleDisplay(m.rule)}</td>
                                             <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                                                 <div {...STATUS_BADGE(m.status)}>{getStatusText(m.status)}</div>

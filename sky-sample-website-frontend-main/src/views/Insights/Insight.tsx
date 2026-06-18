@@ -36,7 +36,7 @@ function Insight() {
         align="center"
         sx={{ mt: 2, color: "var(--pallet-main-blue)" }}
       >
-        View real-time insights on collection efficiency and trends.
+        Get a real-time overview of your entire business from production metrics to team performance and beyond.
       </Typography>
     </Stack>
   );

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
+import { formatDisplayValue } from '../../util/numbers.util';
 import { useQueryClient } from '@tanstack/react-query';
 import api from '../../utils/api';
 import useCurrentUser from '../../hooks/useCurrentUser';
@@ -121,7 +122,7 @@ export default function Dashboard() {
                                         <div key={idx} className="metric-block" style={{ position: 'relative' }}>
                                             <span className="metric-label">{metric.label}</span>
                                             <span className="metric-value" style={metric.status === 'red' ? { color: '#ef4444' } : undefined}>
-                                                {metric.value}
+                                                {formatDisplayValue(metric.value)}
                                             </span>
                                             {metric.note && (
                                                 <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '6px', fontStyle: 'italic', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.2' }}>

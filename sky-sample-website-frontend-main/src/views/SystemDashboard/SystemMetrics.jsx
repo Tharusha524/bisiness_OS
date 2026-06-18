@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
+import { formatDisplayValue } from '../../util/numbers.util';
 import api from '../../utils/api';
 import '../../css/Dashboard.css';
 import '../../css/SystemMetrics.css';
@@ -211,7 +212,7 @@ export default function SystemMetrics() {
                                 </div>
                                 <div className="metric-text-details">
                                     <span className="metric-card-label">{metric.name}</span>
-                                    <span className="metric-card-value">{metric.value || '—'}</span>
+                                    <span className="metric-card-value">{formatDisplayValue(metric.value)}</span>
                                 </div>
                             </div>
                             
