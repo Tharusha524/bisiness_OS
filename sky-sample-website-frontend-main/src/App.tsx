@@ -28,7 +28,7 @@ import { es, fr, de, enUS } from "date-fns/locale";
 
 function AppContent() {
   const { user } = useCurrentUser();
-  
+
   const themeMode = useMemo(() => {
     if (!user || !user.themePreference || user.themePreference === 'System') {
       return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -55,7 +55,7 @@ function AppContent() {
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <BrowserRouter basename="/panda_jp/">
+        <BrowserRouter basename="/panda_jp_demo/">
           <SnackbarProvider maxSnack={3} autoHideDuration={2500}>
             <PermissionDeniedListener />
             <AutoLogoutProvider>
@@ -71,7 +71,7 @@ function AppContent() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-        <AppContent />
+      <AppContent />
     </QueryClientProvider>
   );
 }

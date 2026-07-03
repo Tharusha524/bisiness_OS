@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ComOrganization;
+use App\Models\UserActivity;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\EmailChangeOTPsend\SendOtpEmailChange;
@@ -34,15 +35,15 @@ class LoginController extends Controller
             $user->otp = $otp;
             $user->otp_expires_at = now()->addMinutes(5);
             $user->save();
-            
+
             $organizationName = $org ? $org->organizationName : 'Company';
             $organizationFactoryName = $org ? $org->organizationFactoryName : '';
-            $logoData = null; // Mock logo for now
-            
+            $logoData = null;
+
             Notification::route('mail', $user->email)->notify(
                 new SendOtpEmailChange($otp, $user->email, $user->name, $organizationName, $logoData, $organizationFactoryName)
             );
-            
+
             return response()->json([
                 'requires_2fa' => true,
                 'message' => '2FA Code sent to email.',
@@ -52,12 +53,22 @@ class LoginController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        UserActivity::create([
+            'user_id'     => $user->id,
+            'user_name'   => $user->name,
+            'user_email'  => $user->email,
+            'action'      => 'LOGIN',
+            'module'      => 'Auth',
+            'description' => $user->name . ' logged into the system',
+            'ip_address'  => $request->ip(),
+        ]);
+
         \App\Models\LoginHistory::create([
-            'user_id' => $user->id,
+            'user_id'    => $user->id,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'device' => $this->getDeviceFromUserAgent($request->userAgent()),
-            'login_at' => now(),
+            'device'     => $this->getDeviceFromUserAgent($request->userAgent()),
+            'login_at'   => now(),
         ]);
 
         $permObj = $user->comPermission?->permissionObject ?? [];
@@ -77,7 +88,7 @@ class LoginController extends Controller
     {
         $request->validate([
             'user_id' => 'required|integer',
-            'otp' => 'required|digits:6',
+            'otp'     => 'required|digits:6',
         ]);
 
         $user = User::find($request->user_id);
@@ -85,7 +96,7 @@ class LoginController extends Controller
         if (!$user || (string) $user->otp !== (string) $request->otp) {
             return response()->json(['message' => 'Invalid OTP code.'], 400);
         }
-        
+
         if (now()->greaterThan($user->otp_expires_at)) {
             return response()->json(['message' => 'OTP has expired.'], 400);
         }
@@ -96,12 +107,22 @@ class LoginController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        UserActivity::create([
+            'user_id'     => $user->id,
+            'user_name'   => $user->name,
+            'user_email'  => $user->email,
+            'action'      => 'LOGIN',
+            'module'      => 'Auth',
+            'description' => $user->name . ' logged in via 2FA',
+            'ip_address'  => $request->ip(),
+        ]);
+
         \App\Models\LoginHistory::create([
-            'user_id' => $user->id,
+            'user_id'    => $user->id,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'device' => $this->getDeviceFromUserAgent($request->userAgent()),
-            'login_at' => now(),
+            'device'     => $this->getDeviceFromUserAgent($request->userAgent()),
+            'login_at'   => now(),
         ]);
 
         $permObj = $user->comPermission?->permissionObject ?? [];
@@ -117,12 +138,9 @@ class LoginController extends Controller
         ], 201);
     }
 
-
-
     private function getDeviceFromUserAgent($userAgent)
     {
         if (!$userAgent) return 'Unknown';
-        
         $userAgent = strtolower($userAgent);
         if (strpos($userAgent, 'windows') !== false) return 'Windows PC';
         if (strpos($userAgent, 'mac') !== false) return 'Mac';
@@ -130,7 +148,6 @@ class LoginController extends Controller
         if (strpos($userAgent, 'iphone') !== false) return 'iPhone';
         if (strpos($userAgent, 'ipad') !== false) return 'iPad';
         if (strpos($userAgent, 'android') !== false) return 'Android Device';
-        
         return 'Other Device';
     }
 }

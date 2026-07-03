@@ -3,6 +3,7 @@ namespace App\Http\Controllers\CommonControllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ComOrganization\OrganizationRequest;
+use App\Models\UserActivity;
 use App\Repositories\All\ComOrganization\ComOrganizationInterface;
 use App\Services\OrganizationService;
 
@@ -79,6 +80,16 @@ public function index()
         }
 
         $updated = $this->comOrganizationInterface->update($id, $data);
+
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'EDIT',
+            'module'      => 'Company Settings',
+            'description' => ($request->user()?->name ?? 'User') . ' updated company/organization settings',
+            'ip_address'  => $request->ip(),
+        ]);
 
         return response()->json([
             'message' => 'Organization updated successfully.',

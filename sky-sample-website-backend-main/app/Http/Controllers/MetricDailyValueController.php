@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Metric;
 use App\Models\MetricDailyValue;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 
 class MetricDailyValueController extends Controller
@@ -76,6 +77,16 @@ class MetricDailyValueController extends Controller
         if ($latest) {
             $metric->updateQuietly(['value' => $latest->value]);
         }
+
+        UserActivity::create([
+            'user_id'     => $user->id,
+            'user_name'   => $user->name,
+            'user_email'  => $user->email,
+            'action'      => 'DATA_SAVE',
+            'module'      => 'KPI Data',
+            'description' => $user->name . ' saved KPI value for "' . $metric->name . '" on ' . $request->data_date,
+            'ip_address'  => $request->ip(),
+        ]);
 
         return response()->json($dailyValue, 201);
     }

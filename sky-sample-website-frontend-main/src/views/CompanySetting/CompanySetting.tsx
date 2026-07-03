@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material';
 import { getOrganization, updateOrganization } from '../../api/OrganizationSettings/organizationSettingsApi';
 import { fetchHolidays, createHoliday, updateHoliday, deleteHoliday } from '../../api/OrganizationSettings/companyHolidaysApi';
+import api from '../../utils/api';
 import DepartmentTable from '../Administration/DepartmentTable';
 import JobPositionTable from '../Administration/JobPositionTable';
 import '../../css/Dashboard.css';
@@ -22,6 +23,9 @@ export default function CompanySetting() {
 
     const { data: orgData, isLoading } = useQuery({ queryKey: ['organization'], queryFn: getOrganization });
     const { data: holidays = [], refetch: refetchHolidays } = useQuery({ queryKey: ['holidays'], queryFn: fetchHolidays });
+    const { data: activities = [], refetch: refetchActivities } = useQuery({ queryKey: ['user-activities'], queryFn: () => api.get('/user-activities').then(r => r.data) });
+
+    const [activityFilter, setActivityFilter] = useState('');
 
     const [isHolidayOpen, setIsHolidayOpen] = useState(false);
     const [newHolidayName, setNewHolidayName] = useState('');
@@ -437,6 +441,64 @@ export default function CompanySetting() {
                 <div style={cardStyle}>
                     <SectionHeader title="Job Positions" desc="Manage job positions available in your organisation." />
                     <JobPositionTable />
+                </div>
+
+                {/* ── 9. User Activities ── */}
+                <div style={cardStyle}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <SectionHeader title="User Activities" desc="Real-time log of all user actions in the system." />
+                        <button onClick={() => refetchActivities()} style={{ padding: '7px 14px', backgroundColor: 'var(--color-accent-green)', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', fontSize: '0.82rem' }}>
+                            Refresh
+                        </button>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Search by user, action or module..."
+                        value={activityFilter}
+                        onChange={e => setActivityFilter(e.target.value)}
+                        style={{ ...inpStyle, marginBottom: '14px', width: '100%', boxSizing: 'border-box' }}
+                    />
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                            <thead>
+                                <tr style={{ backgroundColor: dark ? '#0f172a' : '#f1f5f9' }}>
+                                    {['Time', 'User', 'Email', 'Action', 'Module', 'Description', 'IP'].map(h => (
+                                        <th key={h} style={{ padding: '10px 12px', textAlign: 'left', color: txt.secondary, fontWeight: 600, borderBottom: `1px solid ${divider}`, whiteSpace: 'nowrap' }}>{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {activities
+                                    .filter((a: any) =>
+                                        !activityFilter ||
+                                        a.user_name?.toLowerCase().includes(activityFilter.toLowerCase()) ||
+                                        a.action?.toLowerCase().includes(activityFilter.toLowerCase()) ||
+                                        a.module?.toLowerCase().includes(activityFilter.toLowerCase()) ||
+                                        a.description?.toLowerCase().includes(activityFilter.toLowerCase())
+                                    )
+                                    .map((a: any, i: number) => (
+                                        <tr key={a.id ?? i} style={{ borderBottom: `1px solid ${divider}` }}>
+                                            <td style={{ padding: '9px 12px', color: txt.secondary, whiteSpace: 'nowrap' }}>{new Date(a.created_at).toLocaleString()}</td>
+                                            <td style={{ padding: '9px 12px', color: txt.primary, fontWeight: 500 }}>{a.user_name ?? '—'}</td>
+                                            <td style={{ padding: '9px 12px', color: txt.secondary }}>{a.user_email ?? '—'}</td>
+                                            <td style={{ padding: '9px 12px' }}>
+                                                <span style={{
+                                                    padding: '2px 8px', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 700,
+                                                    backgroundColor: a.action === 'LOGIN' ? '#dcfce7' : a.action === 'LOGOUT' ? '#fee2e2' : '#dbeafe',
+                                                    color: a.action === 'LOGIN' ? '#16a34a' : a.action === 'LOGOUT' ? '#dc2626' : '#1d4ed8'
+                                                }}>{a.action}</span>
+                                            </td>
+                                            <td style={{ padding: '9px 12px', color: txt.secondary }}>{a.module ?? '—'}</td>
+                                            <td style={{ padding: '9px 12px', color: txt.primary }}>{a.description ?? '—'}</td>
+                                            <td style={{ padding: '9px 12px', color: txt.secondary, fontFamily: 'monospace', fontSize: '0.8rem' }}>{a.ip_address ?? '—'}</td>
+                                        </tr>
+                                    ))}
+                                {activities.length === 0 && (
+                                    <tr><td colSpan={7} style={{ padding: '24px', textAlign: 'center', color: txt.secondary }}>No activities recorded yet.</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 

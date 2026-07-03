@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\System;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 
 class SystemController extends Controller
@@ -34,6 +35,16 @@ class SystemController extends Controller
 
         $system = System::create($validated);
 
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'CREATE',
+            'module'      => 'Production System',
+            'description' => ($request->user()?->name ?? 'User') . ' created production system "' . $system->name . '"',
+            'ip_address'  => $request->ip(),
+        ]);
+
         return response()->json($system, 201);
     }
 
@@ -48,6 +59,16 @@ class SystemController extends Controller
 
         $system->update($validated);
 
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'EDIT',
+            'module'      => 'Production System',
+            'description' => ($request->user()?->name ?? 'User') . ' updated production system "' . $system->name . '"',
+            'ip_address'  => $request->ip(),
+        ]);
+
         return response()->json($system);
     }
 
@@ -56,7 +77,18 @@ class SystemController extends Controller
      */
     public function destroy(System $system)
     {
+        $name = $system->name;
         $system->delete();
+
+        UserActivity::create([
+            'user_id'     => request()->user()?->id,
+            'user_name'   => request()->user()?->name,
+            'user_email'  => request()->user()?->email,
+            'action'      => 'DELETE',
+            'module'      => 'Production System',
+            'description' => (request()->user()?->name ?? 'User') . ' deleted production system "' . $name . '"',
+            'ip_address'  => request()->ip(),
+        ]);
 
         return response()->json([
             'message' => 'System deleted successfully.'

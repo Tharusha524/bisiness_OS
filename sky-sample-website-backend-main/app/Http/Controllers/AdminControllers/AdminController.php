@@ -3,6 +3,7 @@ namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\ComAssigneeLevel;
+use App\Models\UserActivity;
 use App\Repositories\All\AssigneeLevel\AssigneeLevelInterface;
 use App\Repositories\All\ComPermission\ComPermissionInterface;
 use App\Repositories\All\User\UserInterface;
@@ -123,6 +124,16 @@ class AdminController extends Controller
 
         $user->save();
 
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'EDIT',
+            'module'      => 'User Management',
+            'description' => ($request->user()?->name ?? 'Admin') . ' updated user "' . $user->name . '"',
+            'ip_address'  => $request->ip(),
+        ]);
+
         return response()->json($user->toArray(), 200);
     }
 
@@ -139,6 +150,16 @@ class AdminController extends Controller
 
         // Revoke all Sanctum tokens so access is immediately cut
         $user->tokens()->delete();
+
+        UserActivity::create([
+            'user_id'     => request()->user()?->id,
+            'user_name'   => request()->user()?->name,
+            'user_email'  => request()->user()?->email,
+            'action'      => 'DELETE',
+            'module'      => 'User Management',
+            'description' => (request()->user()?->name ?? 'Admin') . ' deleted user "' . $user->name . '"',
+            'ip_address'  => request()->ip(),
+        ]);
 
         $user->delete();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomDashboard;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -45,6 +46,16 @@ class CustomDashboardController extends Controller
                 'special_notes' => $request->special_notes
             ]
         );
+
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'DATA_SAVE',
+            'module'      => 'Production Dashboard',
+            'description' => ($request->user()?->name ?? 'User') . ' saved production dashboard data for ' . $request->date,
+            'ip_address'  => $request->ip(),
+        ]);
 
         return response()->json($dashboard);
     }

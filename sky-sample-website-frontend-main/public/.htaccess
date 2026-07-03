@@ -1,6 +1,6 @@
 Options -MultiViews
 RewriteEngine On
-RewriteBase /panda_jp/
+RewriteBase /panda_jp_demo/
 
 # Set correct MIME types
 AddType application/javascript .js

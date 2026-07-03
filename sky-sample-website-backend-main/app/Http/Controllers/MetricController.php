@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\System;
 use App\Models\Metric;
 use App\Models\Bank;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 
 class MetricController extends Controller
@@ -41,6 +42,16 @@ class MetricController extends Controller
 
         $this->syncMetricItems($metric);
 
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'CREATE',
+            'module'      => 'KPI Management',
+            'description' => ($request->user()?->name ?? 'User') . ' created KPI "' . $metric->name . '"',
+            'ip_address'  => $request->ip(),
+        ]);
+
         return response()->json($metric, 201);
     }
 
@@ -67,6 +78,16 @@ class MetricController extends Controller
 
         $this->syncMetricItems($metric);
 
+        UserActivity::create([
+            'user_id'     => $request->user()?->id,
+            'user_name'   => $request->user()?->name,
+            'user_email'  => $request->user()?->email,
+            'action'      => 'EDIT',
+            'module'      => 'KPI Management',
+            'description' => ($request->user()?->name ?? 'User') . ' updated KPI "' . $metric->name . '"',
+            'ip_address'  => $request->ip(),
+        ]);
+
         return response()->json($metric);
     }
 
@@ -76,7 +97,18 @@ class MetricController extends Controller
     public function destroy($metricId)
     {
         $metric = Metric::findOrFail($metricId);
+        $name = $metric->name;
         $metric->delete();
+
+        UserActivity::create([
+            'user_id'     => request()->user()?->id,
+            'user_name'   => request()->user()?->name,
+            'user_email'  => request()->user()?->email,
+            'action'      => 'DELETE',
+            'module'      => 'KPI Management',
+            'description' => (request()->user()?->name ?? 'User') . ' deleted KPI "' . $name . '"',
+            'ip_address'  => request()->ip(),
+        ]);
 
         return response()->json([
             'message' => 'Metric deleted successfully.'

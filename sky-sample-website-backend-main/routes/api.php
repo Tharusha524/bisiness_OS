@@ -99,6 +99,7 @@ use App\Http\Controllers\SustainabilityAppsControllers\SaSrSDGController;
 use App\Http\Controllers\SustainabilityAppsControllers\SaSrSDGReportingRecodeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CustomDashboardController;
+use App\Http\Controllers\UserActivityController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('calculate', [CalculationController::class, 'store']);
@@ -181,6 +182,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // ── Dashboard ─────────────────────────────────────────────────────────────
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
         ->middleware('permission:DASHBOARD_VIEW');
+
+    // ── User Activities ───────────────────────────────────────────────────────
+    Route::get('user-activities', [UserActivityController::class, 'index'])
+        ->middleware('permission:COMPANY_SETTING_EDIT');
 
     // ── Systems – read open (needed by dashboard, setup, input, access mgmt) ──
     Route::get('systems', [\App\Http\Controllers\SystemController::class, 'index']);
