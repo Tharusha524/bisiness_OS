@@ -368,7 +368,7 @@ export default function MainLayout({ children, sidebarConfig }: Props) {
           <DrawerContent handleDrawerClose={handleDrawerClose} sidebarConfig={sidebarConfig || sidebarItems} organizationName={organizationName} logoUrl={logoUrl} />
         </Drawer>
       )}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, minWidth: 0, overflowX: "hidden", "@media print": { p: 0 } }}>
+      <Box component="main" sx={{ flexGrow: 1, p: { xs: 1, md: 3 }, minWidth: 0, overflowX: "auto", "@media print": { p: 0 } }}>
         <DrawerHeader sx={{ "@media print": { display: "none" } }} />
         {children}
       </Box>

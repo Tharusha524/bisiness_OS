@@ -180,7 +180,7 @@ export default function UserSetting() {
     const strength = pwdStrength(newPassword);
 
     const inpStyle: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: '6px', border: `1px solid ${inp.border}`, fontSize: '1rem', backgroundColor: inp.bg, color: txt.primary, boxSizing: 'border-box' };
-    const cardStyle: React.CSSProperties = { backgroundColor: card.bg, padding: '28px', borderRadius: '8px', border: `1px solid ${card.border}`, boxShadow: dark ? 'none' : '0 1px 3px rgba(0,0,0,0.05)' };
+    const cardStyle: React.CSSProperties = { backgroundColor: card.bg, padding: 'clamp(16px, 4vw, 28px)', borderRadius: '8px', border: `1px solid ${card.border}`, boxShadow: dark ? 'none' : '0 1px 3px rgba(0,0,0,0.05)', overflowX: 'auto' };
 
     const SectionHeader = ({ title, desc }: { title: string; desc: string }) => (
         <div style={{ marginBottom: '20px', paddingBottom: '10px', borderBottom: `1px solid ${divider}` }}>
@@ -219,7 +219,7 @@ export default function UserSetting() {
     const isPending = updateProfileMutation.isPending || updateImageMutation.isPending;
 
     return (
-        <div className="setup-container animate-fade-in" style={{ padding: '24px' }}>
+        <div className="setup-container animate-fade-in" style={{ padding: 'clamp(12px, 3vw, 24px)' }}>
             <div style={{ marginBottom: '28px' }}>
                 <h2 className="setup-title" style={{ color: txt.heading, marginBottom: '6px' }}>User Settings</h2>
                 <p className="setup-subtitle" style={{ color: txt.secondary }}>Manage your personal profile, preferences, and security.</p>
@@ -240,26 +240,26 @@ export default function UserSetting() {
                             </div>
                             <div>
                                 <Label text="Profile Photo" />
-                                <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setProfileImage(f); setProfileImagePreview(URL.createObjectURL(f)); } }} style={{ fontSize: '0.88rem', color: txt.secondary }} />
+                                <input type="file" accept="image/*" onChange={e => { const f = e.target.files?.[0]; if (f) { setProfileImage(f); setProfileImagePreview(URL.createObjectURL(f)); } }} style={{ fontSize: '0.88rem', color: txt.secondary, maxWidth: '100%' }} />
                                 <p style={{ marginTop: '4px', fontSize: '0.8rem', color: txt.secondary }}>Square image recommended. Max 2 MB.</p>
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div className="rg-2" style={{ marginBottom: '20px' }}>
                             <div>
                                 <Label text="Full Name" />
                                 <input type="text" value={name} onChange={e => setName(e.target.value)} style={inpStyle} required />
                             </div>
                             <div>
                                 <Label text="Email Address" />
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <input type="email" value={user?.email || ''} disabled style={{ ...inpStyle, color: txt.secondary }} />
+                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                    <input type="email" value={user?.email || ''} disabled style={{ ...inpStyle, color: txt.secondary, minWidth: '0', flex: '1 1 160px' }} />
                                     <button type="button" onClick={() => setIsEmailModalOpen(true)} style={{ padding: '0 14px', backgroundColor: dark ? '#334155' : '#e2e8f0', color: txt.primary, border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>Update</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div className="rg-2" style={{ marginBottom: '20px' }}>
                             <div>
                                 <Label text="Mobile Number" />
                                 <input type="text" value={mobile} onChange={e => setMobile(e.target.value)} style={inpStyle} />
@@ -274,7 +274,7 @@ export default function UserSetting() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+                        <div className="rg-3">
                             <ReadOnly label="Employee Number" value={user?.employeeNumber || ''} />
                             <ReadOnly label="Department" value={user?.department || ''} />
                             <ReadOnly label="Job Position" value={user?.jobPosition || ''} />
@@ -287,7 +287,7 @@ export default function UserSetting() {
                     <div style={cardStyle}>
                         <SectionHeader title="Preferences" desc="Customise your interface and default views." />
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div className="rg-2" style={{ marginBottom: '20px' }}>
                             <div>
                                 <Label text="Theme" />
                                 <select value={themePreference} onChange={e => setThemePreference(e.target.value)} style={inpStyle}>
@@ -307,7 +307,7 @@ export default function UserSetting() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                        <div className="rg-2">
                             <div>
                                 <Label text="Default Landing Page" />
                                 <select value={defaultLandingPage} onChange={e => setDefaultLandingPage(e.target.value)} style={inpStyle}>
@@ -403,7 +403,7 @@ export default function UserSetting() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {(activeSessions as any[]).length === 0 && <p style={{ color: txt.secondary, fontSize: '0.9rem' }}>No active sessions found.</p>}
                         {(activeSessions as any[]).map((s: any) => (
-                            <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px', border: `1px solid ${card.border}`, borderRadius: '6px', backgroundColor: dark ? '#0f172a' : '#f8fafc' }}>
+                            <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', padding: '14px', border: `1px solid ${card.border}`, borderRadius: '6px', backgroundColor: dark ? '#0f172a' : '#f8fafc' }}>
                                 <div>
                                     <div style={{ fontWeight: 600, color: txt.primary, fontSize: '0.9rem' }}>{s.name}</div>
                                     <div style={{ fontSize: '0.8rem', color: txt.secondary }}>Last used: {new Date(s.last_used_at).toLocaleString()}</div>
@@ -470,7 +470,7 @@ export default function UserSetting() {
             {/* ── Email Change Modal ── */}
             {isEmailModalOpen && (
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-                    <div style={{ backgroundColor: card.bg, padding: '28px', borderRadius: '10px', width: '100%', maxWidth: '460px', border: `1px solid ${card.border}` }}>
+                    <div style={{ backgroundColor: card.bg, padding: 'clamp(16px, 4vw, 28px)', borderRadius: '10px', width: '100%', maxWidth: '460px', margin: '16px', border: `1px solid ${card.border}` }}>
                         <h3 style={{ marginTop: 0, color: txt.heading }}>Update Email Address</h3>
 
                         {emailChangeStep === 'init' && (

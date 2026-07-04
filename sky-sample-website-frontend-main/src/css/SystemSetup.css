@@ -3,6 +3,26 @@
 .setup-container {
     padding: 40px;
     flex-grow: 1;
+    overflow-x: auto;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .setup-container {
+        padding: 16px;
+    }
+}
+
+/* Responsive grids — controlled via CSS so media queries work */
+.rg-2, .rg-3 {
+    display: grid;
+    gap: 20px;
+}
+
+@media (min-width: 641px) {
+    .rg-2 { grid-template-columns: 1fr 1fr; }
+    .rg-3 { grid-template-columns: 1fr 1fr 1fr; }
 }
 
 /* Breadcrumbs */

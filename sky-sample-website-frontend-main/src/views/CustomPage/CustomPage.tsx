@@ -34,12 +34,24 @@ export default function CustomPage() {
     const { user } = useCurrentUser();
     const canEdit = user?.permissionObject?.[PermissionKeys.CUSTOM_PAGE_EDIT];
 
-    const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
+    const [date, setDate] = useState('');
     const [tableData, setTableData] = useState(initialTableData);
     const [specialNotes, setSpecialNotes] = useState('');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
+
+    // On mount: load the latest date that has data
+    useEffect(() => {
+        api.get('/custom-dashboard')
+            .then(res => {
+                const latestDate = res.data?.date
+                    ? String(res.data.date).substring(0, 10)
+                    : new Date().toISOString().split('T')[0];
+                setDate(latestDate);
+            })
+            .catch(() => setDate(new Date().toISOString().split('T')[0]));
+    }, []);
 
     useEffect(() => {
         if (date) {

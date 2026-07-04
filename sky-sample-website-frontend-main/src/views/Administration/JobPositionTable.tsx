@@ -52,7 +52,7 @@ export default function JobPositionTable() {
 
   return (
     <Stack spacing={2} sx={{ width: "100%", maxWidth: 600 }}>
-      <Paper elevation={2} sx={{ padding: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
+      <Paper elevation={2} sx={{ padding: 2, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <TextField
           label="New Job Position Name"
           variant="outlined"

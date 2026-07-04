@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material';
@@ -201,7 +201,7 @@ export default function CompanySetting() {
     );
 
     const inpStyle: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: '6px', border: `1px solid ${inp.border}`, fontSize: '1rem', backgroundColor: inp.bg, color: txt.primary, boxSizing: 'border-box' };
-    const cardStyle: React.CSSProperties = { backgroundColor: card.bg, padding: '28px', borderRadius: '8px', border: `1px solid ${card.border}`, boxShadow: dark ? 'none' : '0 1px 3px rgba(0,0,0,0.05)' };
+    const cardStyle: React.CSSProperties = { backgroundColor: card.bg, padding: 'clamp(16px, 4vw, 28px)', borderRadius: '8px', border: `1px solid ${card.border}`, boxShadow: dark ? 'none' : '0 1px 3px rgba(0,0,0,0.05)', overflowX: 'auto' };
     const chk: React.CSSProperties = { width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--color-accent-green)' };
 
     const SectionHeader = ({ title, desc }: { title: string; desc: string }) => (
@@ -236,8 +236,8 @@ export default function CompanySetting() {
     );
 
     return (
-        <div className="setup-container animate-fade-in" style={{ padding: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+        <div className="setup-container animate-fade-in" style={{ padding: 'clamp(12px, 3vw, 24px)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
                     <h2 className="setup-title" style={{ color: txt.heading, marginBottom: '6px' }}>Company Settings</h2>
                     <p className="setup-subtitle" style={{ color: txt.secondary }}>Manage global configuration, security policies, and operational rules.</p>
@@ -253,7 +253,7 @@ export default function CompanySetting() {
                 <div style={cardStyle}>
                     <SectionHeader title="Core Identity & Branding" desc="Primary company details and logo." />
 
-                    <div style={{ marginBottom: '22px', display: 'flex', alignItems: 'center', gap: '18px' }}>
+                    <div style={{ marginBottom: '22px', display: 'flex', alignItems: 'flex-start', gap: '18px', flexWrap: 'wrap' }}>
                         <div style={{ width: '76px', height: '76px', borderRadius: '8px', border: `1px dashed ${inp.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', backgroundColor: inp.bg }}>
                             {logoPreviewUrl
                                 ? <img src={logoPreviewUrl} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
@@ -261,16 +261,16 @@ export default function CompanySetting() {
                         </div>
                         <div>
                             <Label text="Company Logo" />
-                            <input type="file" accept="image/*" onChange={e => { if (e.target.files?.[0]) { setLogoFile(e.target.files[0]); setLogoPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} style={{ fontSize: '0.88rem', color: txt.secondary }} />
+                            <input type="file" accept="image/*" onChange={e => { if (e.target.files?.[0]) { setLogoFile(e.target.files[0]); setLogoPreviewUrl(URL.createObjectURL(e.target.files[0])); } }} style={{ fontSize: '0.88rem', color: txt.secondary, maxWidth: '100%' }} />
                             <Helper text="256×256 px recommended. Max 2 MB." />
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div className="rg-2" style={{ marginBottom: '20px' }}>
                         <div><Label text="Organization Name *" /><input type="text" value={organizationName} onChange={e => setOrganizationName(e.target.value)} style={inpStyle} required /></div>
                         <div><Label text="Factory / Branch Name" /><input type="text" value={organizationFactoryName} onChange={e => setOrganizationFactoryName(e.target.value)} style={inpStyle} /></div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div className="rg-2" style={{ marginBottom: '20px' }}>
                         <div><Label text="Phone" /><input type="text" value={companyPhone} onChange={e => setCompanyPhone(e.target.value)} style={inpStyle} /></div>
                         <div>
                             <Label text="Industry" />
@@ -280,7 +280,7 @@ export default function CompanySetting() {
                             </select>
                         </div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div className="rg-2" style={{ marginBottom: '20px' }}>
                         <div><Label text="Website" /><input type="url" value={companyWebsite} onChange={e => setCompanyWebsite(e.target.value)} placeholder="https://example.com" style={inpStyle} /></div>
                         <div><Label text="Support Email" /><input type="email" value={supportEmail} onChange={e => setSupportEmail(e.target.value)} style={inpStyle} /></div>
                     </div>
@@ -295,7 +295,7 @@ export default function CompanySetting() {
                 <div style={cardStyle}>
                     <SectionHeader title="Localisation & Working Hours" desc="Currency, timezone, and when staff work." />
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div className="rg-3" style={{ marginBottom: '20px' }}>
                         <div>
                             <Label text="Default Currency" />
                             <select value={defaultCurrency} onChange={e => setDefaultCurrency(e.target.value)} style={inpStyle}>
@@ -331,7 +331,7 @@ export default function CompanySetting() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div className="rg-2">
                         <div><Label text="Working Hours Start" /><input type="time" value={workingHoursStart} onChange={e => setWorkingHoursStart(e.target.value)} style={inpStyle} /><Helper text="Office opens at this time." /></div>
                         <div><Label text="Working Hours End" /><input type="time" value={workingHoursEnd} onChange={e => setWorkingHoursEnd(e.target.value)} style={inpStyle} /><Helper text="Office closes at this time." /></div>
                     </div>
@@ -343,7 +343,7 @@ export default function CompanySetting() {
                 <div style={cardStyle}>
                     <SectionHeader title="Data Entry Rules" desc="Control how users submit KPI data on the Input Page." />
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div className="rg-2">
                         <div>
                             <Label text="Historical Data Grace Period (days)" />
                             <input type="number" value={historicalDataGracePeriod} onChange={e => setHistoricalDataGracePeriod(e.target.value ? Number(e.target.value) : '')} min="1" max="365" style={inpStyle} />
@@ -367,7 +367,7 @@ export default function CompanySetting() {
                         <Label text="Headquarters Address" />
                         <textarea value={headquartersAddress} onChange={e => setHeadquartersAddress(e.target.value)} rows={2} style={{ ...inpStyle, resize: 'vertical' }} />
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div className="rg-2">
                         <div><Label text="Tax / Registration ID" /><input type="text" value={taxId} onChange={e => setTaxId(e.target.value)} placeholder="VAT or EIN" style={inpStyle} /></div>
                         <div>
                             <Label text="Financial Year Start" />
@@ -384,7 +384,7 @@ export default function CompanySetting() {
                 <div style={cardStyle}>
                     <SectionHeader title="Security & Access Policies" desc="Authentication rules and password requirements." />
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                    <div className="rg-2" style={{ marginBottom: '20px' }}>
                         <div><Label text="Session Timeout (minutes)" /><input type="number" value={sessionTimeout} onChange={e => setSessionTimeout(e.target.value ? Number(e.target.value) : '')} placeholder="60" min="1" max="1440" style={inpStyle} /></div>
                         <div><Label text="Allowed Email Domains" /><input type="text" value={allowedEmailDomains} onChange={e => setAllowedEmailDomains(e.target.value)} placeholder="acme.com, acmecorp.com" style={inpStyle} /><Helper text="Leave blank to allow any. Comma-separated." /></div>
                     </div>
@@ -396,7 +396,7 @@ export default function CompanySetting() {
 
                     <h4 style={{ margin: '0 0 14px', color: txt.primary, fontSize: '0.95rem' }}>Password Policy</h4>
 
-                    <div style={{ display: 'flex', gap: '12px', marginBottom: '18px' }}>
+                    <div style={{ display: 'flex', gap: '12px', marginBottom: '18px', flexWrap: 'wrap', alignItems: 'center' }}>
                         {['Standard', 'Strict'].map(p => (
                             <button key={p} type="button" onClick={() => handlePolicyToggle(p)} style={{ padding: '8px 20px', borderRadius: '6px', border: `2px solid ${passwordPolicy === p ? 'var(--color-accent-green)' : inp.border}`, backgroundColor: passwordPolicy === p ? 'var(--color-accent-green)' : inp.bg, color: passwordPolicy === p ? 'white' : txt.primary, cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>
                                 {p}
@@ -407,7 +407,7 @@ export default function CompanySetting() {
                         </span>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '16px' }}>
+                    <div className="rg-2" style={{ marginBottom: '16px' }}>
                         <div><Label text="Minimum Password Length" /><input type="number" value={passwordMinLength} onChange={e => setPasswordMinLength(e.target.value ? Number(e.target.value) : '')} min="4" max="32" style={inpStyle} /></div>
                         <div><Label text="Password Expiry (days, 0 = never)" /><input type="number" value={passwordExpiryDays} onChange={e => setPasswordExpiryDays(e.target.value ? Number(e.target.value) : '')} min="0" style={inpStyle} /></div>
                     </div>
@@ -505,7 +505,7 @@ export default function CompanySetting() {
             {/* ── Holidays Drawer ── */}
             {isHolidayOpen && (
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'flex-end', zIndex: 1000 }}>
-                    <div style={{ width: '400px', backgroundColor: card.bg, height: '100%', padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', borderLeft: `1px solid ${card.border}` }}>
+                    <div style={{ width: 'min(400px, 100vw)', backgroundColor: card.bg, height: '100%', padding: 'clamp(16px, 4vw, 24px)', overflowY: 'auto', display: 'flex', flexDirection: 'column', borderLeft: `1px solid ${card.border}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
                             <h3 style={{ margin: 0, color: txt.heading }}>Company Holidays</h3>
                             <button onClick={() => { setIsHolidayOpen(false); setEditingHoliday(null); setNewHolidayName(''); setNewHolidayDate(''); }} style={{ background: 'none', border: 'none', fontSize: '1.4rem', cursor: 'pointer', color: txt.secondary }}>&times;</button>
